@@ -173,7 +173,7 @@ uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=1
 /* 							IMU_VARIABLES 						*/
 
 float L_Roll=0, L_Pitch=0, R_Roll=0, R_Pitch=0;
-float Left_Roll_Pos = 1.5, Right_Roll_Pos = 2.8125, Right_Pitch_Pos = 6.25, Left_Pitch_Pos=10.5625, Left_Column_Error =0 , Left_Col_Pos = 0;
+float Left_Roll_Pos = 1.5, Right_Roll_Pos = 1.375, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=10.5625, Left_Column_Error =0 , Left_Col_Pos = 0;
 bool Left_IMU_State=1, Initiate_Process=0;
 
 /* 							IMU_VARIABLES 						*/
@@ -181,7 +181,7 @@ bool Left_IMU_State=1, Initiate_Process=0;
 uint16_t Track_Width = 1730, Min_Track_Width = 1730, Zero_Turn_Angle = 33, Wheel_Base = 900;
 uint16_t Steer_Angle[5];
 float LF_Steering=0, LR_Steering=0, RF_Steering=0, RR_Steering=0;	
-float LF_HomePos =8, LR_HomePos= 685 , RF_HomePos= 451 , RR_HomePos = 615;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
+float LF_HomePos =10, LR_HomePos= 678 , RF_HomePos= 456 , RR_HomePos = 618;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
 float LF_Speed=0, LR_Speed=0, RF_Speed=0, RR_Speed=0 , LF_Speed_Temp =0, LR_Speed_Temp =0 , RF_Speed_Temp=0, RR_Speed_Temp=0, LF_Error=0, LR_Error=0, RF_Error=0, RR_Error=0;		
 _Bool Steering_Reset_Flag = SET , LF_SET = NULL , LR_SET = NULL, RF_SET = NULL, RR_SET = NULL , BUZZ_SW = SET;
 float Inner_Angle =0 , Outer_Angle=0, Prev_Inner_Angle =0 , AW_Angle=0 , Outer_Angle_2=0 , LS_Angle=0, RS_Angle=0;
