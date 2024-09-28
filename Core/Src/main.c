@@ -52,7 +52,7 @@
 	#define					DATA											2
 	#define					STEERING_BOUNDARY 				2
 	#define					STEERING_HOMING_SPEED	 	15
-	#define					STEERING_KP			 					3
+	#define					STEERING_KP			 					5
 	#define					STEERING_MAX_VEL					50
 	
 	#define					VELOCITY					0
@@ -71,10 +71,10 @@
 	#define					IMU_L							0x08
 	#define					IMU_R							0x09
 	#define					LF_STEER					0x10
-	#define					LR_STEER					0x11
+	#define					LR_STEER					0x14
 	#define					RF_STEER					0x12
 	#define					RR_STEER					0x13
-	#define					L_ARM							0x14
+	#define					L_ARM							0x11
 	#define					R_ARM							0x15
 	#define					P_ARM							0x16
 	#define					LT_SENS						0x17
@@ -163,7 +163,7 @@ uint8_t RxData2[8];
 uint8_t RxData2_Temp[8];
 uint8_t RxData_Temp[8];
 uint32_t TxMailbox, CAN_Count=0;
-uint8_t Node_Id[23],PREV_Node_Id[22], Received_Node_Id=0, Received_Command_Id=0;
+uint8_t Node_Id[30],PREV_Node_Id[30], Received_Node_Id=0, Received_Command_Id=0;
 uint8_t Sensor_Id[10], Axis_State[20];
 float Motor_Velocity[20], Rover_Voltage=0,Motor_Current[20], Rover_Voltage_Temp=0;uint8_t Motor_Error[20], Encoder_Error[20] , Volt_Tx=0, Volt_Tx_Temp=0;
 uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=10, RRS=11, L_Arm=12, R_Arm=13, P_Arm=14 , Upper_Width =16 , Lower_Width = 15, Cutter=17, Side_Belt = 18, Selective = 19, Paddle =20;
@@ -181,7 +181,7 @@ bool Left_IMU_State=1, Initiate_Process=0;
 uint16_t Track_Width = 1730, Min_Track_Width = 1730, Zero_Turn_Angle = 33, Wheel_Base = 900;
 uint16_t Steer_Angle[5];
 float LF_Steering=0, LR_Steering=0, RF_Steering=0, RR_Steering=0;	
-float LF_HomePos =10, LR_HomePos= 678 , RF_HomePos= 456 , RR_HomePos = 618;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
+float LF_HomePos =8, LR_HomePos= 688 , RF_HomePos= 454 , RR_HomePos = 617;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
 float LF_Speed=0, LR_Speed=0, RF_Speed=0, RR_Speed=0 , LF_Speed_Temp =0, LR_Speed_Temp =0 , RF_Speed_Temp=0, RR_Speed_Temp=0, LF_Error=0, LR_Error=0, RF_Error=0, RR_Error=0;		
 _Bool Steering_Reset_Flag = SET , LF_SET = NULL , LR_SET = NULL, RF_SET = NULL, RR_SET = NULL , BUZZ_SW = SET;
 float Inner_Angle =0 , Outer_Angle=0, Prev_Inner_Angle =0 , AW_Angle=0 , Outer_Angle_2=0 , LS_Angle=0, RS_Angle=0;
@@ -224,7 +224,7 @@ float R_Kp=7, R_Ki=0, R_Kd=5;
 long R_P=0, R_I=0, R_D=0;
 float Error=0, L_Prev_Error=0, L_Error_Change=0, L_Error_Slope=0, L_Error_Area=0, Left_Out=0, Right_Out=0, Contour_Out=0;
 float  C_Error_Change=0, C_Error_Slope=0, C_Error_Area=0, C_Prev_Error=0;
-float C_Kp=15, C_Ki=0, C_Kd=0;  //3,5 8,100
+float C_Kp=25, C_Ki=0, C_Kd=0;  //3,5 8,100
 long C_P=0, C_I=0, C_D=0;
 double dt=0.01 ;
 int Left_Vertical_Error=0;
@@ -271,6 +271,12 @@ bool FLAG = SET;
 uint8_t Prev_Joystick = 0;
 int count = 0;
 float Rover_Velocity = 0.0;
+
+bool JOYSTICK_STATE_FLAG = SET, AXIS_STATE_FLAG = SET, HEARTBEAT_FLAG = SET, FET_TEMP_FLAG = SET, OPERATION_MONITOR_FLAG = SET, MOTORS_STOP_FLAG = SET;
+uint64_t Tick_Count1 = 0, Tick_Count2 = 0;
+uint16_t Node_Id_Temp[30];
+// FET_Temperature[21];
+int Node = 0, fet = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -319,6 +325,8 @@ void Left_Frame_Controls (void);
  void Clear_Error (int Axis);
  void Position_Flap_Sensing(void);
  void Shearing_Motors(void);
+ void Emergency_Stop(void);
+ void Operations_Monitor(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -406,17 +414,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 	switch(RxHeader.StdId)
 	{
 			
-		case (IMU_L)	 :	L_Roll = ((int16_t)(RxData[1]<<8 | RxData[0]))/16.0;	L_Pitch = ((int16_t)(RxData[3]<<8 | RxData[2]))/16.0;				  Sensor_Id[1]++;	break; 
+		case (IMU_L)	 :	L_Roll = ((int16_t)(RxData[1]<<8 | RxData[0]))/16.0;	L_Pitch = ((int16_t)(RxData[3]<<8 | RxData[2]))/16.0;				  Sensor_Id[1]++; Node_Id[21]++;	break; 
 		
-		case (IMU_R)	 :	R_Roll = ((int16_t)(RxData[1]<<8 | RxData[0]))/16.0;	R_Pitch = ((int16_t)(RxData[3]<<8 | RxData[2]))/16.0;				  Sensor_Id[2]++;	break;
+		case (IMU_R)	 :	R_Roll = ((int16_t)(RxData[1]<<8 | RxData[0]))/16.0;	R_Pitch = ((int16_t)(RxData[3]<<8 | RxData[2]))/16.0;				  Sensor_Id[2]++;Node_Id[22]++;		break;
 			
-		case (LF_STEER): 	Steer_Angle[1] = CAN_SPI_READ(RxData);  			LF_Steering = New_Sensor_Pos ( Steer_Angle[1] , LF_HomePos ) ;						Sensor_Id[3]++; break;
+		case (LF_STEER): 	Steer_Angle[1] = CAN_SPI_READ(RxData);  			LF_Steering = New_Sensor_Pos ( Steer_Angle[1] , LF_HomePos ) ;						Sensor_Id[3]++;Node_Id[23]++;	 break;
 		
-		case (LR_STEER): 	Steer_Angle[2] = CAN_SPI_READ(RxData);				LR_Steering = New_Sensor_Pos ( Steer_Angle[2] , LR_HomePos ) ;						Sensor_Id[4]++; break;
+		case (LR_STEER): 	Steer_Angle[2] = CAN_SPI_READ(RxData);				LR_Steering = New_Sensor_Pos ( Steer_Angle[2] , LR_HomePos ) ;						Sensor_Id[4]++;Node_Id[24]++; break;
 		
-		case (RF_STEER): 	Steer_Angle[3] = CAN_SPI_READ(RxData);				RF_Steering = New_Sensor_Pos ( Steer_Angle[3] , RF_HomePos ) ;						Sensor_Id[5]++;	break;
+		case (RF_STEER): 	Steer_Angle[3] = CAN_SPI_READ(RxData);				RF_Steering = New_Sensor_Pos ( Steer_Angle[3] , RF_HomePos ) ;						Sensor_Id[5]++;Node_Id[25]++;	break;
 		
-		case (RR_STEER): 	Steer_Angle[4] = CAN_SPI_READ(RxData);	 			RR_Steering = New_Sensor_Pos ( Steer_Angle[4] , RR_HomePos ) ;						Sensor_Id[6]++; break;
+		case (RR_STEER): 	Steer_Angle[4] = CAN_SPI_READ(RxData);	 			RR_Steering = New_Sensor_Pos ( Steer_Angle[4] , RR_HomePos ) ;						Sensor_Id[6]++;Node_Id[26]++; break;
 		
 /*		case (L_ARM): 		Left_Arm_Raw =CAN_SPI_READ(RxData); 					Left_Arm = New_Sensor_Pos (Left_Arm_Raw, LA_Home_Pos );										ARM_SPI[0]++;				  Sensor_Id[7]++; break;
 		
@@ -535,8 +543,8 @@ int main(void)
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 	
 	HAL_Delay(1500);
-	for ( uint8_t i = 1 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
-	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);}
+	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
+	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);Start_Calibration_For (13, 8, 5);Start_Calibration_For (12, 8, 5);Start_Calibration_For (14, 8, 5);}
 	
 	
 	/* UART INITS */
@@ -626,7 +634,7 @@ int main(void)
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
-  osKernelStart();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -636,13 +644,18 @@ int main(void)
   {
 		BT_State = BT_READ;
 		Joystick_Reception();
-		Drives_Error_Check();
+		   Operations_Monitor();
+		if(OPERATION_MONITOR_FLAG==SET){
+//		Drives_Error_Check();
 		EEPROM_Store_Data();
 		New_Drive_Controls();
-	   Steering_Controls();
-//		Frame_Controls();
+    Steering_Controls();
+		Frame_Controls();
 		Dynamic_Width_Adjustment();
 		//Shearing_Motors();
+		}
+		else{Emergency_Stop();}
+		
 		//Position_Flap_Sensing();
 		
     /* USER CODE END WHILE */
@@ -1126,7 +1139,7 @@ void Drives_Error_Check(void)
 
 	for(uint8_t i = 1; i < 5; i++)
 	{
-		if ( i != 5 ){ if ( Axis_State[i] != 8 ){ DRIVES_ERROR_FLAG = SET; Heal_Error(i); //HAL_Delay(3000)
+		if ( i != 5 ){ if ( Axis_State[i] != 8 ){ DRIVES_ERROR_FLAG = SET; Heal_Error(i); HAL_Delay(10);
 			 } //HAL_Delay(3); 
 		}
 		
@@ -1219,7 +1232,7 @@ void Heal_Error(uint8_t Axis_Id)
 	
 	while ( Axis_State[Axis_Id] != 8 )
 	{
-		Reboot(Axis_Id);	HAL_Delay(3000);
+		Reboot(Axis_Id);	HAL_Delay(2000);
 		//Start_Calibration_For ( Axis_Id,  8 , 2 ); HAL_Delay(1500);
 	}
 	
@@ -1235,7 +1248,7 @@ void Joystick_Reception(void)
 		Mode 						 = BT_Rx[1];
 		Speed 					 = BT_Rx[2]  != 0 ? BT_Rx[2] : Speed ;
 		Steering_Mode 	 = BT_Rx[3];
-		Pot_Angle        = BT_Rx[4]; 
+		Pot_Angle        = abs(BT_Rx[4]-180); 
 		Joystick         = BT_Rx[5];
 		Shearing				 = BT_Rx[6];
 		
@@ -2163,6 +2176,91 @@ void Battery_Status_Indication(void)
 		}
 		
 
+}
+void Operations_Monitor(void)
+{
+    MOTORS_STOP_FLAG = SET;
+	if (HAL_GetTick() - Tick_Count1 >= 1500)
+	{
+		if (BT_State == NULL) { JOYSTICK_STATE_FLAG = NULL;}
+		
+		for (uint8_t i = 1; i < 17; i++)
+		{
+			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
+			
+			if (Node_Id[i] == Node_Id_Temp[i]) { HEARTBEAT_FLAG = NULL; }
+			Node_Id_Temp[i] = Node_Id[i];}
+			
+		//	if (FET_Temperature[i] > 95) { FET_TEMP_FLAG = NULL; }
+		}
+		
+		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET ? SET : NULL;
+		
+		Tick_Count1 = HAL_GetTick();
+	}
+}
+
+void Emergency_Stop(void)
+{
+	BUZZER_ON;
+	
+	if (MOTORS_STOP_FLAG)
+	{
+		for (uint8_t i = 1; i < 5; i++) {Set_Motor_Torque(i , 0);}
+		for (uint8_t i = 6; i < 17; i++){Set_Motor_Velocity(i, 0);}
+		MOTORS_STOP_FLAG = NULL;      
+	}
+	
+	if (HAL_GetTick() - Tick_Count2 >= 1500)
+	{
+		if (JOYSTICK_STATE_FLAG == NULL)
+		{
+			if (BT_State == 1){JOYSTICK_STATE_FLAG = SET;}
+		}
+		
+		if (AXIS_STATE_FLAG == NULL)
+		{
+			for (uint8_t i = 1; i < 27; i++)
+				{
+					if (Axis_State[i] != 8)
+					{if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20){
+						Reboot(i);
+						HAL_Delay(2000);
+					}
+					}
+				}
+				AXIS_STATE_FLAG = SET;
+		}
+		
+		if (HEARTBEAT_FLAG == NULL)
+		{
+			for (uint8_t i = 1; i < 27; i++)
+			{if(i!=5 && i!=17 && i!=18&& i!=19&&i!=20){
+					if (Node_Id[i] == Node_Id_Temp[i]){ Node++;}
+					Node_Id_Temp[i] = Node_Id[i];//chk
+					}
+			}
+			if (Node == 0){HEARTBEAT_FLAG = SET;}
+			else {Node = 0;}
+		}
+		
+//		if (FET_TEMP_FLAG == NULL)
+//		{
+//			for (uint8_t i = 1; i < 21; i++)
+//			{
+//				if (FET_Temperature[i] > 95){ fet++;}
+//			}
+//			if (fet == 0){FET_TEMP_FLAG = SET;}
+//			fet = 0;
+//		}
+		
+		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET ? SET : NULL;
+		if (OPERATION_MONITOR_FLAG) {BUZZER_OFF;}
+		
+		Tick_Count2 = HAL_GetTick();
+	}
+	
+	
 }
 
 
