@@ -164,7 +164,7 @@ uint8_t RxData2_Temp[8];
 uint8_t RxData_Temp[8];
 uint32_t TxMailbox, CAN_Count=0;
 uint8_t Node_Id[30],PREV_Node_Id[30], Received_Node_Id=0, Received_Command_Id=0;
-uint8_t Sensor_Id[10], Axis_State[20];
+uint8_t Sensor_Id[10], Axis_State[30];
 float Motor_Velocity[20], Rover_Voltage=0,Motor_Current[20], Rover_Voltage_Temp=0;uint8_t Motor_Error[20], Encoder_Error[20] , Volt_Tx=0, Volt_Tx_Temp=0;
 uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=10, RRS=11, L_Arm=12, R_Arm=13, P_Arm=14 , Upper_Width =16 , Lower_Width = 15, Cutter=17, Side_Belt = 18, Selective = 19, Paddle =20;
 
@@ -224,7 +224,7 @@ float R_Kp=7, R_Ki=0, R_Kd=5;
 long R_P=0, R_I=0, R_D=0;
 float Error=0, L_Prev_Error=0, L_Error_Change=0, L_Error_Slope=0, L_Error_Area=0, Left_Out=0, Right_Out=0, Contour_Out=0;
 float  C_Error_Change=0, C_Error_Slope=0, C_Error_Area=0, C_Prev_Error=0;
-float C_Kp=25, C_Ki=0, C_Kd=0;  //3,5 8,100
+float C_Kp=15, C_Ki=2, C_Kd=5700;         //20 5  5500    //20  0.05  17000
 long C_P=0, C_I=0, C_D=0;
 double dt=0.01 ;
 int Left_Vertical_Error=0;
@@ -644,8 +644,8 @@ int main(void)
   {
 		BT_State = BT_READ;
 		Joystick_Reception();
-		   Operations_Monitor();
-		if(OPERATION_MONITOR_FLAG==SET){
+		   //Operations_Monitor();
+		//if(OPERATION_MONITOR_FLAG==SET){
 //		Drives_Error_Check();
 		EEPROM_Store_Data();
 		New_Drive_Controls();
@@ -653,8 +653,8 @@ int main(void)
 		Frame_Controls();
 		Dynamic_Width_Adjustment();
 		//Shearing_Motors();
-		}
-		else{Emergency_Stop();}
+		//}
+		//else{Emergency_Stop();}
 		
 		//Position_Flap_Sensing();
 		
@@ -2184,7 +2184,7 @@ void Operations_Monitor(void)
 	{
 		if (BT_State == NULL) { JOYSTICK_STATE_FLAG = NULL;}
 		
-		for (uint8_t i = 1; i < 17; i++)
+		for (uint8_t i = 1; i < 27; i++)
 		{
 			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 			
@@ -2220,17 +2220,20 @@ void Emergency_Stop(void)
 		
 		if (AXIS_STATE_FLAG == NULL)
 		{
-			for (uint8_t i = 1; i < 27; i++)
+			for (uint8_t i = 1; i < 17; i++)
 				{
-					if (Axis_State[i] != 8)
-					{if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20){
+					
+					if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20){
+						while (Axis_State[i] != 8)
+					{
 						Reboot(i);
 						HAL_Delay(2000);
 					}
 					}
-				}
-				AXIS_STATE_FLAG = SET;
+				
 		}
+				AXIS_STATE_FLAG = SET;
+	}
 		
 		if (HEARTBEAT_FLAG == NULL)
 		{
