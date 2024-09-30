@@ -112,8 +112,8 @@
 	#define					WIDE_ANGLE				5
 	#define					SHRINK_ANGLE			5
 	#define					Anti_Windup_Limit		2
-	#define					V_LIMIT							50
-	#define					C_LIMIT							50
+	#define					V_LIMIT							70
+	#define					C_LIMIT							70
 	#define					ARM_HOMING_SPEED	 	15
 	
 	#define					BT_READ						HAL_GPIO_ReadPin(UART5_State_GPIO_Port,UART5_State_Pin);
@@ -173,7 +173,7 @@ uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=1
 /* 							IMU_VARIABLES 						*/
 
 float L_Roll=0, L_Pitch=0, R_Roll=0, R_Pitch=0;
-float Left_Roll_Pos = 1.5, Right_Roll_Pos = 1.375, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=10.5625, Left_Column_Error =0 , Left_Col_Pos = 0;
+float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=10.5625, Left_Column_Error =0 , Left_Col_Pos = 0;
 bool Left_IMU_State=1, Initiate_Process=0;
 
 /* 							IMU_VARIABLES 						*/
@@ -192,7 +192,7 @@ bool Angle_Ready = 0;
 float FL_Raw =0, FR_Raw = 0, RL_Raw = 0, RR_Raw = 0;
 float FL_Angle=0, FR_Angle=0, RL_Angle =0, RR_Angle=0, FL_Angle_Temp=0;
 uint16_t FL_Home_Pos = 563 , FR_Home_Pos = 0, RL_Home_Pos = 0, RR_Home_Pos = 0;
-int Left_Arm_Motor_Count=0, Right_Arm_Motor_Count=0, Right_Arm_Motor_Value=0, Left_Arm_Motor_Value=0, Pitch_Arm_Motor_Count=0, Pitch_Arm_Motor_Value=0;
+float Left_Arm_Motor_Count=0, Right_Arm_Motor_Count=0, Right_Arm_Motor_Value=0, Left_Arm_Motor_Value=0, Pitch_Arm_Motor_Count=0, Pitch_Arm_Motor_Value=0;
 float L_Arm_Speed=0, R_Arm_Speed=0, L_Arm_Speed_Temp=0, R_Arm_Speed_Temp=0, Pitch_Arm_Speed_Temp=0, Tri_Arm_Speed=0;double Pitch_Arm_Speed=0;
 _Bool Front_Left_Bush = 0, Front_Right_Bush = 0, Front_Bushes_Sensed = 0, First_Sense=0 , Rear_Bush=0;
 int Flaps_Target = 36, Flap_Error=0;
@@ -218,20 +218,20 @@ int16_t Absolute_Position_Int[20];
 
 /* 							FRAME_CONTROLS_VARIABLES 						*/
 float L_Vert_Speed=0, R_Vert_Speed=0, L_Vert_Speed_Temp=0, R_Vert_Speed_Temp=0, Contour_Speed=0, Contour_Speed_Temp=0;
-bool Left_Error_Flag=NULL , Right_Error_Flag=NULL , Contour_Error_Flag=NULL, FRAME_NO_ERROR_FLAG=SET; 
+bool Left_Error_Flag=NULL , Right_Error_Flag=NULL , Contour_Error_Flag=NULL, FRAME_NO_ERROR_FLAG=SET,Contour_Limit=SET,Vertical_Limit=SET; 
 float  R_Error_Change=0, R_Error_Slope=0, R_Error_Area=0, R_Prev_Error=0;
 float R_Kp=7, R_Ki=0, R_Kd=5; 
 long R_P=0, R_I=0, R_D=0;
 float Error=0, L_Prev_Error=0, L_Error_Change=0, L_Error_Slope=0, L_Error_Area=0, Left_Out=0, Right_Out=0, Contour_Out=0;
 float  C_Error_Change=0, C_Error_Slope=0, C_Error_Area=0, C_Prev_Error=0;
-float C_Kp=15, C_Ki=2, C_Kd=5700;         //20 5  5500    //20  0.05  17000
+float C_Kp=9, C_Ki=2, C_Kd=5;         //20 5  5500    //20  0.05  17000
 long C_P=0, C_I=0, C_D=0;
 double dt=0.01 ;
 int Left_Vertical_Error=0;
 int Current_Vel_Limit = 0, Modified_Vel_Limit = 0, Modified_Vel_Limit_Temp =0 , Prev_Mod=0; 
 float Width_Motor_Speed=0, Width_Motor_Temp=0, Lower_Width_Motor_Speed = 0, Upper_Width_Motor_Speed = 0, Lower_Width_Motor_Speed_Temp=0, Upper_Width_Motor_Speed_Temp=0;
-int Lower_Width_Motor_Count=0, Upper_Width_Motor_Count=0, Lower_Width_Motor_Value=0, Upper_Width_Motor_Value=0; // Total Counts
-int Right_Vertical_Motor_Count =0, Contour_Motor_Count =0, Right_Vertical_Motor_Value =0, Contour_Motor_Value =0;;
+int16_t Lower_Width_Motor_Count=0, Upper_Width_Motor_Count=0, Lower_Width_Motor_Value=0, Upper_Width_Motor_Value=0; // Total Counts
+int16_t Right_Vertical_Motor_Count =0, Contour_Motor_Count =0, Right_Vertical_Motor_Value =0, Contour_Motor_Value =0;;
 bool Right_Vertical_On_Limit = 0, Contour_On_Limit=0;
 /* 							FRAME_CONTROLS_VARIABLES 						*/
 
@@ -475,7 +475,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 	{
 		case HEARTBEAT:  							Node_Id[Received_Node_Id]++;    Axis_State[Received_Node_Id] = RxData2[4]; break;
 		
-		case ENEST_ID:  							Motor_Velocity[Received_Node_Id]	= CAN_Reception(MSB);  Absolute_Position_Reception (	Received_Node_Id ); 	   break;		
+		case ENEST_ID:  							Motor_Velocity[Received_Node_Id]	= CAN_Reception(MSB);  Absolute_Position_Reception(Received_Node_Id); 	   break;		
 
 		case SENS_EST:  							Motor_Velocity[Received_Node_Id]	= CAN_Reception(MSB); 				  			 	 break;
 		
@@ -592,7 +592,9 @@ int main(void)
 //	Right_Arm_Motor_Value = 0;
 //	Pitch_Arm_Motor_Value = 0;
 //Lower_Width_Motor_Value = 0;	
-//Upper_Width_Motor_Value = 0;			
+//Upper_Width_Motor_Value = 0;
+//Right_Vertical_Motor_Value=0;
+Contour_Motor_Value=0;
 
 	BUZZER_OFF;
 	//Initiate_Process = SET;
@@ -644,17 +646,18 @@ int main(void)
   {
 		BT_State = BT_READ;
 		Joystick_Reception();
-		   //Operations_Monitor();
-		//if(OPERATION_MONITOR_FLAG==SET){
-//		Drives_Error_Check();
+		   Operations_Monitor();
+		if(OPERATION_MONITOR_FLAG==SET){
+		//Drives_Error_Check();
 		EEPROM_Store_Data();
 		New_Drive_Controls();
     Steering_Controls();
-		Frame_Controls();
+		//Frame_Controls();
 		Dynamic_Width_Adjustment();
+			
 		//Shearing_Motors();
-		//}
-		//else{Emergency_Stop();}
+		}
+		else{Emergency_Stop();}
 		
 		//Position_Flap_Sensing();
 		
@@ -1248,7 +1251,7 @@ void Joystick_Reception(void)
 		Mode 						 = BT_Rx[1];
 		Speed 					 = BT_Rx[2]  != 0 ? BT_Rx[2] : Speed ;
 		Steering_Mode 	 = BT_Rx[3];
-		Pot_Angle        = abs(BT_Rx[4]-180); 
+		Pot_Angle        = BT_Rx[4]; 
 		Joystick         = BT_Rx[5];
 		Shearing				 = BT_Rx[6];
 		
@@ -2186,7 +2189,9 @@ void Operations_Monitor(void)
 		
 		for (uint8_t i = 1; i < 27; i++)
 		{
-			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
+			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20)
+			{
+			//if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 			
 			if (Node_Id[i] == Node_Id_Temp[i]) { HEARTBEAT_FLAG = NULL; }
 			Node_Id_Temp[i] = Node_Id[i];}
@@ -2194,7 +2199,14 @@ void Operations_Monitor(void)
 		//	if (FET_Temperature[i] > 95) { FET_TEMP_FLAG = NULL; }
 		}
 		
-		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET ? SET : NULL;
+		for (uint8_t i = 1; i < 17; i++)
+		{
+			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
+		}
+	}
+		if(abs((Right_Vertical_Motor_Count>=40 && Right_Vertical_Motor_Count<=50)||Right_Vertical_Motor_Count>=50  )) Vertical_Limit=NULL;
+	if(abs((Contour_Motor_Count>=40 && Contour_Motor_Count<=50)||Contour_Motor_Count>=50 )) Contour_Limit=NULL;
+		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Contour_Limit==SET && Vertical_Limit==SET ? SET : NULL;
 		
 		Tick_Count1 = HAL_GetTick();
 	}
@@ -2257,7 +2269,7 @@ void Emergency_Stop(void)
 //			fet = 0;
 //		}
 		
-		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET ? SET : NULL;
+		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Vertical_Limit==SET && Contour_Limit==SET? SET : NULL;
 		if (OPERATION_MONITOR_FLAG) {BUZZER_OFF;}
 		
 		Tick_Count2 = HAL_GetTick();

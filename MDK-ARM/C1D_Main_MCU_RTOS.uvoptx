@@ -268,7 +268,7 @@
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Lower_Width_Motor_Count</ItemText>
+          <ItemText>Lower_Width_Motor_Count,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
@@ -625,6 +625,36 @@
           <WinNumber>1</WinNumber>
           <ItemText>C_Kd</ItemText>
         </Ww>
+        <Ww>
+          <count>95</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Contour_Speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>96</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Right_Vertical_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>97</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Contour_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>98</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Right_Vertical_Motor_Count,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>99</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Right_Vertical_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>100</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Contour_Motor_Count,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -696,6 +726,16 @@
           <count>13</count>
           <WinNumber>2</WinNumber>
           <ItemText>Speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Absolute_Position</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Absolute_Position_Int,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
