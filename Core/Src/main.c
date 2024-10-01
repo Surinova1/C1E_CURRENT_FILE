@@ -173,7 +173,7 @@ uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=1
 /* 							IMU_VARIABLES 						*/
 
 float L_Roll=0, L_Pitch=0, R_Roll=0, R_Pitch=0;
-float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=10.5625, Left_Column_Error =0 , Left_Col_Pos = 0;
+float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=15.625, Left_Column_Error =0 , Left_Col_Pos = 0;
 bool Left_IMU_State=1, Initiate_Process=0;
 
 /* 							IMU_VARIABLES 						*/
@@ -543,8 +543,8 @@ int main(void)
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 	
 	HAL_Delay(1500);
-	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
-	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);Start_Calibration_For (13, 8, 5);Start_Calibration_For (12, 8, 5);Start_Calibration_For (14, 8, 5);}
+//	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
+//	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);Start_Calibration_For (13, 8, 5);Start_Calibration_For (12, 8, 5);Start_Calibration_For (14, 8, 5);}
 	
 	
 	/* UART INITS */
@@ -594,7 +594,7 @@ int main(void)
 //Lower_Width_Motor_Value = 0;	
 //Upper_Width_Motor_Value = 0;
 //Right_Vertical_Motor_Value=0;
-Contour_Motor_Value=0;
+//Contour_Motor_Value=0;
 
 	BUZZER_OFF;
 	//Initiate_Process = SET;
@@ -646,13 +646,14 @@ Contour_Motor_Value=0;
   {
 		BT_State = BT_READ;
 		Joystick_Reception();
+		EEPROM_Store_Data();
 		   Operations_Monitor();
 		if(OPERATION_MONITOR_FLAG==SET){
 		//Drives_Error_Check();
-		EEPROM_Store_Data();
+		Left_Frame_Controls();
 		New_Drive_Controls();
     Steering_Controls();
-		//Frame_Controls();
+	  	Frame_Controls();
 		Dynamic_Width_Adjustment();
 			
 		//Shearing_Motors();
@@ -1192,7 +1193,7 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	EEPROM_Read(25, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
 	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
 	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
@@ -1203,20 +1204,20 @@ void Read_EEPROM_Data(void)
 	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
 	
 	
-	if(Read_Value[0]>=600) 
-	{memcpy(&Lower_Width_Motor_Value, &Read_Value_1[28],4 );}	 
-  if(Read_Value[4]>=600)	
-	{memcpy(&Upper_Width_Motor_Value, &Read_Value_1[4],4 );}
-	if(Read_Value[8]>=600)
-	{memcpy(&Left_Arm_Motor_Value, &Read_Value_1[8],4 );}
-	if(Read_Value[12]>=600)
-	{memcpy(&Right_Arm_Motor_Value, &Read_Value_1[12],4 );}
-	if(Read_Value[16]>=600)
-	{memcpy(&Pitch_Arm_Motor_Value, &Read_Value_1[16],4 );}
-	if(Read_Value[20]>=600)
-	{memcpy(&Right_Vertical_Motor_Value, &Read_Value_1[20],4 );}
-	if(Read_Value[24]>=600)
-	{	memcpy(&Contour_Motor_Value, &Read_Value_1[24],4 );}
+//	if(Read_Value[0]>=600) 
+//	{memcpy(&Lower_Width_Motor_Value, &Read_Value_1[28],4 );}	 
+//  if(Read_Value[4]>=600)	
+//	{memcpy(&Upper_Width_Motor_Value, &Read_Value_1[4],4 );}
+//	if(Read_Value[8]>=600)
+//	{memcpy(&Left_Arm_Motor_Value, &Read_Value_1[8],4 );}
+//	if(Read_Value[12]>=600)
+//	{memcpy(&Right_Arm_Motor_Value, &Read_Value_1[12],4 );}
+//	if(Read_Value[16]>=600)
+//	{memcpy(&Pitch_Arm_Motor_Value, &Read_Value_1[16],4 );}
+//	if(Read_Value[20]>=600)
+//	{memcpy(&Right_Vertical_Motor_Value, &Read_Value_1[20],4 );}
+//	if(Read_Value[24]>=600)
+//	{	memcpy(&Contour_Motor_Value, &Read_Value_1[24],4 );}
 	
 	
 	Lower_Width_Motor_Value 		 = Lower_Width_Motor_Value 			== -1 ? 0 : Lower_Width_Motor_Value;
@@ -1254,7 +1255,7 @@ void Joystick_Reception(void)
 		Pot_Angle        = BT_Rx[4]; 
 		Joystick         = BT_Rx[5];
 		Shearing				 = BT_Rx[6];
-		
+//		Pot_Angle        = abs(Pot_Angle-180);
 		if( Steering_Mode == 0 ) Steering_Mode=1;
 	
 		/*				Steering Reset on every Steering Mode Change								*/
@@ -2189,7 +2190,7 @@ void Operations_Monitor(void)
 		
 		for (uint8_t i = 1; i < 27; i++)
 		{
-			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20)
+			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20 && i!=6)
 			{
 			//if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 			
@@ -2201,11 +2202,11 @@ void Operations_Monitor(void)
 		
 		for (uint8_t i = 1; i < 17; i++)
 		{
-			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
+			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20 && i!=6){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 		}
 	}
-		if(abs((Right_Vertical_Motor_Count>=40 && Right_Vertical_Motor_Count<=50)||Right_Vertical_Motor_Count>=50  )) Vertical_Limit=NULL;
-	if(abs((Contour_Motor_Count>=40 && Contour_Motor_Count<=50)||Contour_Motor_Count>=50 )) Contour_Limit=NULL;
+		if((Right_Vertical_Motor_Count>=200 && Right_Vertical_Motor_Count<=210)||(Right_Vertical_Motor_Count>=210)||(Right_Vertical_Motor_Count<=-200 && Right_Vertical_Motor_Count>=-210) || (Right_Vertical_Motor_Count<=-210) ) Vertical_Limit=NULL;
+	if((Contour_Motor_Count>=150 && Contour_Motor_Count<=160)||(Contour_Motor_Count>=160) || (Contour_Motor_Count<=-150 && Contour_Motor_Count>=-160)||(Contour_Motor_Count<=-150)) Contour_Limit=NULL;
 		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Contour_Limit==SET && Vertical_Limit==SET ? SET : NULL;
 		
 		Tick_Count1 = HAL_GetTick();
@@ -2235,7 +2236,7 @@ void Emergency_Stop(void)
 			for (uint8_t i = 1; i < 17; i++)
 				{
 					
-					if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20){
+					if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20 && i!= 6){
 						while (Axis_State[i] != 8)
 					{
 						Reboot(i);
@@ -2250,13 +2251,13 @@ void Emergency_Stop(void)
 		if (HEARTBEAT_FLAG == NULL)
 		{
 			for (uint8_t i = 1; i < 27; i++)
-			{if(i!=5 && i!=17 && i!=18&& i!=19&&i!=20){
+			{if(i!=5 && i!=17 && i!=18&& i!=19&&i!=20 && i!=6){
 					if (Node_Id[i] == Node_Id_Temp[i]){ Node++;}
 					Node_Id_Temp[i] = Node_Id[i];//chk
 					}
 			}
 			if (Node == 0){HEARTBEAT_FLAG = SET;}
-			else {Node = 0;}
+			Node = 0;
 		}
 		
 //		if (FET_TEMP_FLAG == NULL)
@@ -2406,7 +2407,6 @@ float Contour_PID ( float Contour_Val , unsigned long long 	C_Time_Stamp )
 					C_Error_Area = C_Error_Area + ( C_Error_Change * dt ) ;
 			
 				
-				
 			C_P = C_Kp * Contour_Val;
 			 
 			C_I	= C_Ki * C_Error_Area;						 C_I = C_I > Anti_Windup_Limit ? Anti_Windup_Limit : C_I < -Anti_Windup_Limit ? -Anti_Windup_Limit : C_I ;	
@@ -2464,7 +2464,7 @@ void EEPROM_Store_Data (void)
 		
 		if ( Store_Data)
 		{
-		EEPROM_Write(15, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); HAL_Delay(10);
+		EEPROM_Write(25, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); HAL_Delay(10);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
 		}
 		else {}
@@ -2547,9 +2547,9 @@ void Left_Frame_Controls (void)
 {
 		Left_Vertical_Error =  Left_Pitch_Pos - L_Pitch ; 
       	
-		if ( Left_Vertical_Error > 3 )  Left_Frame_Speed = Joystick == 2 ? 15: -15  ;//(Left_Vertical_Error * Width_Kp) ;
+		if ( Left_Vertical_Error >= 2 )  Left_Frame_Speed = Joystick == 2 ? 15: -15  ;//(Left_Vertical_Error * Width_Kp) ;
 	
-		else if ( Left_Vertical_Error < -3 )  Left_Frame_Speed = Joystick == 2 ? -15 : 15;//(Left_Vertical_Error * Width_Kp) ;
+		else if ( Left_Vertical_Error <= -2 )  Left_Frame_Speed = Joystick == 2 ? -15 : 15;//(Left_Vertical_Error * Width_Kp) ;
 	
 		else Left_Frame_Speed = 0 ;
 

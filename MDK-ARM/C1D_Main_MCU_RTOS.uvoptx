@@ -655,6 +655,26 @@
           <WinNumber>1</WinNumber>
           <ItemText>Contour_Motor_Count,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>101</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Left_Frame_Speed,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>102</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>L_Pitch</ItemText>
+        </Ww>
+        <Ww>
+          <count>103</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Node,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>104</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Node_Id_Temp,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
