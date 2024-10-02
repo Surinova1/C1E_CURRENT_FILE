@@ -675,6 +675,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>Node_Id_Temp,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>105</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Left_Vertical_Error,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>106</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Node_Id,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

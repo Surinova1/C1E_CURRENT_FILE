@@ -173,7 +173,7 @@ uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=1
 /* 							IMU_VARIABLES 						*/
 
 float L_Roll=0, L_Pitch=0, R_Roll=0, R_Pitch=0;
-float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 5.875, Left_Pitch_Pos=15.625, Left_Column_Error =0 , Left_Col_Pos = 0;
+float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 4, Left_Pitch_Pos=15.5, Left_Column_Error =0 , Left_Col_Pos = 0;
 bool Left_IMU_State=1, Initiate_Process=0;
 
 /* 							IMU_VARIABLES 						*/
@@ -230,8 +230,8 @@ double dt=0.01 ;
 int Left_Vertical_Error=0;
 int Current_Vel_Limit = 0, Modified_Vel_Limit = 0, Modified_Vel_Limit_Temp =0 , Prev_Mod=0; 
 float Width_Motor_Speed=0, Width_Motor_Temp=0, Lower_Width_Motor_Speed = 0, Upper_Width_Motor_Speed = 0, Lower_Width_Motor_Speed_Temp=0, Upper_Width_Motor_Speed_Temp=0;
-int16_t Lower_Width_Motor_Count=0, Upper_Width_Motor_Count=0, Lower_Width_Motor_Value=0, Upper_Width_Motor_Value=0; // Total Counts
-int16_t Right_Vertical_Motor_Count =0, Contour_Motor_Count =0, Right_Vertical_Motor_Value =0, Contour_Motor_Value =0;;
+int Lower_Width_Motor_Count=0, Upper_Width_Motor_Count=0, Lower_Width_Motor_Value=0, Upper_Width_Motor_Value=0; // Total Counts
+int Right_Vertical_Motor_Count =0, Contour_Motor_Count =0, Right_Vertical_Motor_Value =0, Contour_Motor_Value =0;;
 bool Right_Vertical_On_Limit = 0, Contour_On_Limit=0;
 /* 							FRAME_CONTROLS_VARIABLES 						*/
 
@@ -277,6 +277,13 @@ uint64_t Tick_Count1 = 0, Tick_Count2 = 0;
 uint16_t Node_Id_Temp[30];
 // FET_Temperature[21];
 int Node = 0, fet = 0;
+
+
+float  LF_Error_Change=0, LF_Error_Slope=0, LF_Error_Area=0, LF_Prev_Error=0;
+float LF_Kp=3, LF_Ki=1, LF_Kd=0;  
+long LF_P=0, LF_I=0, LF_D=0;
+float Left_Frame_Out=0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -327,6 +334,7 @@ void Left_Frame_Controls (void);
  void Shearing_Motors(void);
  void Emergency_Stop(void);
  void Operations_Monitor(void);
+ float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -653,7 +661,7 @@ int main(void)
 		Left_Frame_Controls();
 		New_Drive_Controls();
     Steering_Controls();
-	  	Frame_Controls();
+	  Frame_Controls();
 		Dynamic_Width_Adjustment();
 			
 		//Shearing_Motors();
@@ -1747,7 +1755,7 @@ void Transmit_Motor_Torque (void)
 //			}
 //			////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //			
-//			
+//			 
 //			
 ////			if ( Right_Vel_Limit > Prev_Right_Vel_Limit)
 ////			{
@@ -1800,10 +1808,22 @@ void Transmit_Motor_Torque (void)
 //		}
 		
 		Vel_Limit = Joystick == 0 ? 10 : Speed * 15;   //15
+		if(Joystick != 0 && Steering_Mode != 1)
+		{
+			Vel_Limit = 15;
+			Left_Frame_Speed = 0;
+		}
+		
+		else if (Joystick == 0 && Steering_Mode != 1)
+		{
+			Vel_Limit = 0;
+			Left_Frame_Speed = 0;
+		}
+		
 		
 		if ( Steering_Mode != ALL_WHEEL ){ Left_Steering_Speed = Right_Steering_Speed = 0; }
 	//		Left_Frame_Speed=0;
-			Left_Vel_Limit = Vel_Limit  + Left_Steering_Speed + Left_Frame_Speed+4;
+			Left_Vel_Limit = Vel_Limit  + Left_Steering_Speed + Left_Frame_Speed +4;
 			Right_Vel_Limit = Vel_Limit + Right_Steering_Speed+4;
 	/////////////////////////////////////////////////////////////////////////APPLYING TORQUE/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //		if ( Motor_Velocity[3] < 10 && Motor_Velocity[3] > -10 )
@@ -2186,7 +2206,7 @@ void Operations_Monitor(void)
     MOTORS_STOP_FLAG = SET;
 	if (HAL_GetTick() - Tick_Count1 >= 1500)
 	{
-		if (BT_State == NULL) { JOYSTICK_STATE_FLAG = NULL;}
+		//if (BT_State == NULL) { JOYSTICK_STATE_FLAG = NULL;}
 		
 		for (uint8_t i = 1; i < 27; i++)
 		{
@@ -2207,7 +2227,7 @@ void Operations_Monitor(void)
 	}
 		if((Right_Vertical_Motor_Count>=200 && Right_Vertical_Motor_Count<=210)||(Right_Vertical_Motor_Count>=210)||(Right_Vertical_Motor_Count<=-200 && Right_Vertical_Motor_Count>=-210) || (Right_Vertical_Motor_Count<=-210) ) Vertical_Limit=NULL;
 	if((Contour_Motor_Count>=150 && Contour_Motor_Count<=160)||(Contour_Motor_Count>=160) || (Contour_Motor_Count<=-150 && Contour_Motor_Count>=-160)||(Contour_Motor_Count<=-150)) Contour_Limit=NULL;
-		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Contour_Limit==SET && Vertical_Limit==SET ? SET : NULL;
+		OPERATION_MONITOR_FLAG = AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Contour_Limit==SET && Vertical_Limit==SET ? SET : NULL;
 		
 		Tick_Count1 = HAL_GetTick();
 	}
@@ -2226,10 +2246,10 @@ void Emergency_Stop(void)
 	
 	if (HAL_GetTick() - Tick_Count2 >= 1500)
 	{
-		if (JOYSTICK_STATE_FLAG == NULL)
-		{
-			if (BT_State == 1){JOYSTICK_STATE_FLAG = SET;}
-		}
+//		if (JOYSTICK_STATE_FLAG == NULL)
+//		{
+//			if (BT_State == 1){JOYSTICK_STATE_FLAG = SET;}
+//		}
 		
 		if (AXIS_STATE_FLAG == NULL)
 		{
@@ -2252,14 +2272,16 @@ void Emergency_Stop(void)
 		{
 			for (uint8_t i = 1; i < 27; i++)
 			{if(i!=5 && i!=17 && i!=18&& i!=19&&i!=20 && i!=6){
-					if (Node_Id[i] == Node_Id_Temp[i]){ Node++;}
-					Node_Id_Temp[i] = Node_Id[i];//chk
+					while (Node_Id[i] == Node_Id_Temp[i]){ //Node++;
 					}
+						Node++;
+					}
+			//Node_Id_Temp[i] = Node_Id[i];
 			}
-			if (Node == 0){HEARTBEAT_FLAG = SET;}
-			Node = 0;
+			HEARTBEAT_FLAG = SET;
+			
 		}
-		
+		Node = 0;
 //		if (FET_TEMP_FLAG == NULL)
 //		{
 //			for (uint8_t i = 1; i < 21; i++)
@@ -2270,7 +2292,7 @@ void Emergency_Stop(void)
 //			fet = 0;
 //		}
 		
-		OPERATION_MONITOR_FLAG = JOYSTICK_STATE_FLAG == SET && AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Vertical_Limit==SET && Contour_Limit==SET? SET : NULL;
+		OPERATION_MONITOR_FLAG =  AXIS_STATE_FLAG == SET && HEARTBEAT_FLAG == SET && Vertical_Limit==SET && Contour_Limit==SET? SET : NULL;
 		if (OPERATION_MONITOR_FLAG) {BUZZER_OFF;}
 		
 		Tick_Count2 = HAL_GetTick();
@@ -2428,6 +2450,39 @@ float Contour_PID ( float Contour_Val , unsigned long long 	C_Time_Stamp )
 
 }
 
+float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp )
+{
+	
+	
+
+					LF_Error_Change = Left_Error_Value - LF_Prev_Error;
+					LF_Error_Slope = LF_Error_Change / dt;
+					LF_Error_Area = LF_Error_Area + ( LF_Error_Change * dt ) ;
+			
+				
+				
+			LF_P = LF_Kp * Left_Error_Value;
+			 
+			LF_I	= LF_Ki * LF_Error_Area;						 LF_I = LF_I > Anti_Windup_Limit ? Anti_Windup_Limit : LF_I < -Anti_Windup_Limit ? -Anti_Windup_Limit : LF_I ;	
+
+			LF_D = LF_Kd * LF_Error_Slope; 
+				
+			
+			
+				Left_Frame_Out = LF_P + LF_I + LF_D ;
+		
+			
+			//	Right_Out = (Right_Roll_Value < V_BOUNDARY && Right_Roll_Value	> -V_BOUNDARY) ?	0: Right_Out;
+
+				Left_Frame_Out = Left_Frame_Out > 10 ? 10 : Left_Frame_Out < -10 ? -10 : Left_Frame_Out;
+
+		
+			LF_Prev_Error = Left_Error_Value;
+		//	time = Time_Stamp;
+			
+			return Left_Frame_Out;
+
+}
 
 void EEPROM_Store_Data (void)
 {
@@ -2544,14 +2599,26 @@ void Frame_Synchronization(void)
 }
 
 void Left_Frame_Controls (void)
-{
-		Left_Vertical_Error =  Left_Pitch_Pos - L_Pitch ; 
-      	
-		if ( Left_Vertical_Error >= 2 )  Left_Frame_Speed = Joystick == 2 ? 15: -15  ;//(Left_Vertical_Error * Width_Kp) ;
-	
-		else if ( Left_Vertical_Error <= -2 )  Left_Frame_Speed = Joystick == 2 ? -15 : 15;//(Left_Vertical_Error * Width_Kp) ;
-	
-		else Left_Frame_Speed = 0 ;
+ {
+		 
+	 if(Joystick == 2)
+	 {
+		 Left_Vertical_Error =  Left_Pitch_Pos - L_Pitch ;
+			Left_Frame_Speed=Left_Frame_PID(Left_Vertical_Error,0);
+		 Left_Frame_Speed = Left_Frame_Speed < 3 && Left_Frame_Speed > -3 ? 0 : Left_Frame_Speed;
+	 }
+	 else
+	 {
+		 Left_Frame_Speed = 0;
+	 }
+		//Left_Frame_Speed = Left_Frame_Speed < 2 && Left_Frame_Speed > -2 ? 0 : Left_Frame_Speed;
+	//Left_Frame_Speed = abs(Left_Frame_Speed);
+	//Left_Frame_Speed = Joystick == 1 ? -Left_Frame_Speed: Joystick == 2 ? Left_Frame_Speed : 0;
+//		if ( Left_Vertical_Error >= 2 )  Left_Frame_Speed = Joystick == 2 ? 15: -15  ;//(Left_Vertical_Error * Width_Kp) ;
+//	
+//		else if ( Left_Vertical_Error <= -2 )  Left_Frame_Speed = Joystick == 2 ? -15 : 15;//(Left_Vertical_Error * Width_Kp) ;
+//	
+//		else Left_Frame_Speed = 0 ;
 
 
 }
