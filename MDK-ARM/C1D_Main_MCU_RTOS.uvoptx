@@ -685,6 +685,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>Node_Id,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>107</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Inner_Angle</ItemText>
+        </Ww>
+        <Ww>
+          <count>108</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Outer_Angle</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

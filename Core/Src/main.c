@@ -1807,7 +1807,7 @@ void Transmit_Motor_Torque (void)
 //		if ( Motor_Velocity[3] < -10 ) Vel_Limit = Speed*15;
 //		}
 		
-		Vel_Limit = Joystick == 0 ? 10 : Speed * 15;   //15
+		Vel_Limit = Joystick == 0 ? 10 : Speed * 15;  		//15
 		if(Joystick != 0 && Steering_Mode != 1)
 		{
 			Vel_Limit = 15;
@@ -1819,6 +1819,7 @@ void Transmit_Motor_Torque (void)
 			Vel_Limit = 0;
 			Left_Frame_Speed = 0;
 		}
+ if ((Joystick!=0)&&(Steering_Mode==ALL_WHEEL)&&(LF_Steering >=30 || RF_Steering<=-30)){	Vel_Limit = 15;}
 		
 		
 		if ( Steering_Mode != ALL_WHEEL ){ Left_Steering_Speed = Right_Steering_Speed = 0; }
@@ -2451,8 +2452,7 @@ float Contour_PID ( float Contour_Val , unsigned long long 	C_Time_Stamp )
 }
 
 float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp )
-{
-	
+{	
 	
 
 					LF_Error_Change = Left_Error_Value - LF_Prev_Error;
