@@ -173,7 +173,7 @@ uint8_t LFD=1,LRD=2,RFD=3,RRD=4,LVert=5, RVert=6, Contour=7, LFS=8, LRS=9, RFS=1
 /* 							IMU_VARIABLES 						*/
 
 float L_Roll=0, L_Pitch=0, R_Roll=0, R_Pitch=0;
-float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 4, Left_Pitch_Pos=15.5, Left_Column_Error =0 , Left_Col_Pos = 0;
+float Left_Roll_Pos = 1.5, Right_Roll_Pos = 3.5, Right_Pitch_Pos = 8.1, Left_Pitch_Pos=15.5, Left_Column_Error =0 , Left_Col_Pos = 0;
 bool Left_IMU_State=1, Initiate_Process=0;
 
 /* 							IMU_VARIABLES 						*/
@@ -181,7 +181,7 @@ bool Left_IMU_State=1, Initiate_Process=0;
 uint16_t Track_Width = 1730, Min_Track_Width = 1730, Zero_Turn_Angle = 33, Wheel_Base = 900;
 uint16_t Steer_Angle[5];
 float LF_Steering=0, LR_Steering=0, RF_Steering=0, RR_Steering=0;	
-float LF_HomePos =8, LR_HomePos= 688 , RF_HomePos= 454 , RR_HomePos = 617;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
+float LF_HomePos =9, LR_HomePos= 680 , RF_HomePos= 451 , RR_HomePos = 619;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
 float LF_Speed=0, LR_Speed=0, RF_Speed=0, RR_Speed=0 , LF_Speed_Temp =0, LR_Speed_Temp =0 , RF_Speed_Temp=0, RR_Speed_Temp=0, LF_Error=0, LR_Error=0, RF_Error=0, RR_Error=0;		
 _Bool Steering_Reset_Flag = SET , LF_SET = NULL , LR_SET = NULL, RF_SET = NULL, RR_SET = NULL , BUZZ_SW = SET;
 float Inner_Angle =0 , Outer_Angle=0, Prev_Inner_Angle =0 , AW_Angle=0 , Outer_Angle_2=0 , LS_Angle=0, RS_Angle=0;
@@ -192,10 +192,10 @@ bool Angle_Ready = 0;
 float FL_Raw =0, FR_Raw = 0, RL_Raw = 0, RR_Raw = 0;
 float FL_Angle=0, FR_Angle=0, RL_Angle =0, RR_Angle=0, FL_Angle_Temp=0;
 uint16_t FL_Home_Pos = 563 , FR_Home_Pos = 0, RL_Home_Pos = 0, RR_Home_Pos = 0;
-float Left_Arm_Motor_Count=0, Right_Arm_Motor_Count=0, Right_Arm_Motor_Value=0, Left_Arm_Motor_Value=0, Pitch_Arm_Motor_Count=0, Pitch_Arm_Motor_Value=0;
+int16_t Left_Arm_Motor_Count=0, Right_Arm_Motor_Count=0, Right_Arm_Motor_Value=0, Left_Arm_Motor_Value=0, Pitch_Arm_Motor_Count=0, Pitch_Arm_Motor_Value=0;
 float L_Arm_Speed=0, R_Arm_Speed=0, L_Arm_Speed_Temp=0, R_Arm_Speed_Temp=0, Pitch_Arm_Speed_Temp=0, Tri_Arm_Speed=0;double Pitch_Arm_Speed=0;
 _Bool Front_Left_Bush = 0, Front_Right_Bush = 0, Front_Bushes_Sensed = 0, First_Sense=0 , Rear_Bush=0;
-int Flaps_Target = 36, Flap_Error=0;
+int Flaps_Target = 36, Flap_Error=0,Flap_Error_Right = 0,Flaps_Target_Right=36;
 float Flap_Kp = 2, Pitch_Kp=2 ;
 /* 							SENSING_VARIABLES 						*/
 
@@ -240,7 +240,7 @@ bool Right_Vertical_On_Limit = 0, Contour_On_Limit=0;
 /* 							EEPROM_VARIABLES 						*/
 
 //int16_t Read_Value[28], Write_Value[28], Prev_Write_Value[28],Read_Value_1[28],Max_val=600;
-int16_t Read_Value[36], Write_Value[36], Prev_Write_Value[36],Read_Value_1[36],Start_Value,End_Value;
+int16_t Read_Value[36] = {0}, Write_Value[36], Prev_Write_Value[36],Read_Value_1[36],Start_Value,End_Value;
 bool Store_Data = 0;
 /* 							EEPROM_VARIABLES 						*/
 
@@ -261,9 +261,9 @@ int WheelBase=900/2, TrackWidth=1300/2;
 double kmph = 1;
 int Left_Steering_Speed=0, Right_Steering_Speed=0, Left_Frame_Speed =0;
 
-int16_t Flap_Data[ARRAY_SIZE] = {0};
-int Flap_Angle = 0, Flap_Count=0;
-float Arm_Angle=0,Left_Arm_Pos = 0, Right_Arm_Pos = 0, Pitch_Arm_Pos = 0,Tri_Arm_Pos = 0, Left_Arm_Pos_Temp = 0, Right_Arm_Pos_Temp = 0, Pitch_Arm_Pos_Temp = 0;
+//int16_t Flap_Data[ARRAY_SIZE] = {0};
+//int Flap_Angle = 0, Flap_Count=0;
+//float Arm_Angle=0,Left_Arm_Pos = 0, Right_Arm_Pos = 0, Pitch_Arm_Pos = 0,Tri_Arm_Pos = 0, Left_Arm_Pos_Temp = 0, Right_Arm_Pos_Temp = 0, Pitch_Arm_Pos_Temp = 0;
 
 uint64_t left_tick_count = 0;
 uint64_t right_tick_count = 0;
@@ -283,6 +283,34 @@ float  LF_Error_Change=0, LF_Error_Slope=0, LF_Error_Area=0, LF_Prev_Error=0;
 float LF_Kp=3, LF_Ki=1, LF_Kd=0;  
 long LF_P=0, LF_I=0, LF_D=0;
 float Left_Frame_Out=0;
+
+uint8_t Tx_Uart[2];
+
+int16_t Flap_Data[ARRAY_SIZE] = {0};
+float Flap_Angle = 0, Flap_Angle_Right = 0,Flap_Count=0;
+int16_t Flap_Data_Right[ARRAY_SIZE] = {0};
+
+int Flap_Max_Angle = 55;
+float Arm_Angle=0,Left_Arm_Pos = 0, Right_Arm_Pos = 0, Pitch_Arm_Pos = 0,Tri_Arm_Pos = 0, Left_Arm_Pos_Temp = 0, Right_Arm_Pos_Temp = 0, Pitch_Arm_Pos_Temp = 0;
+int Flap_Mod_Value = 0, Flap_Mod_Value_Right = 0;
+bool Front_Bush = 1;
+uint8_t Array_Element,Arm_Max_Speed=40;
+int Left_Arm_Current_Pos,Right_Arm_Current_Pos,Pitch_Arm_Current_Pos;
+float Shear_Height_Diff =0, L_Arm_Travel = 0, R_Arm_Travel = 0, Shear_Roll_Angle = 0, Pitch_Compensation_mm = 0, Pitch_Target = 0, Pitch_Error = 0;
+
+float  P_Error_Change=0, P_Error_Slope=0, P_Error_Area=0, P_Prev_Error=0, Pitch_Out =0;
+
+
+long L_P=0,L_I=0,L_D=0;
+float L_Kp=0,L_Ki=0,L_Kd=0;
+
+long RA_P=0,RA_I=0,RA_D=0;
+float RA_Kp=0,RA_Ki=0,RA_Kd=0;
+
+long P_P=0,P_I=0,P_D=0;
+float P_Kp=0,P_Ki=0,P_Kd=0;
+
+float RightArm_Out=0,RA_Error_Change=0,RA_Error_Slope=0,RA_Error_Area=0,RA_Prev_Error=0;
 
 /* USER CODE END PV */
 
@@ -335,13 +363,14 @@ void Left_Frame_Controls (void);
  void Emergency_Stop(void);
  void Operations_Monitor(void);
  float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp );
+ void Top_Sensing_Roll(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
 void Update_Array(int16_t* Array, uint8_t Size, int16_t Latest_Value) 
-{uint8_t Sample_Size =5;
+{//uint8_t Sample_Size =5;
     for (uint8_t i = 0; i < Size - 1; i++) {
         Array[i] = Array[i + 1];
     }   
@@ -453,6 +482,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 											//if ( FL_Angle_Temp != FL_Angle ) {Update_Array(Flap_Data ,ARRAY_SIZE , FL_Angle ) ;  	FL_Angle_Temp = FL_Angle; }	
 											Sensor_Id[7]++;
 											break;
+    case (FR_FLAP): FR_Raw =CAN_SPI_READ(RxData); 
+		                Sensor_Id[8]++;
+										break;
 /*				
 		case (FR_FLAP): 	FR_Raw =CAN_SPI_READ(RxData); 								FR_Angle = -(New_Sensor_Pos(FR_Raw, FR_Home_Pos ));													FRAME_SPI[0]++;				Sensor_Id[14]++;break;
 		
@@ -519,7 +551,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -593,7 +625,10 @@ int main(void)
 	
 	Steering_Reset_Flag = SET;
 	LF_Speed= LR_Speed=RF_Speed=RR_Speed=0;
-	//EEPROM_PageErase(3);
+//	for (int i = 1; i <= 256; i++)
+//	{
+//	EEPROM_PageErase(i);
+//	}
 	Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
@@ -607,7 +642,7 @@ int main(void)
 	BUZZER_OFF;
 	//Initiate_Process = SET;
 //	Error_Handler();
-
+HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -654,17 +689,18 @@ int main(void)
   {
 		BT_State = BT_READ;
 		Joystick_Reception();
-		EEPROM_Store_Data();
+	EEPROM_Store_Data();
 		   Operations_Monitor();
 		if(OPERATION_MONITOR_FLAG==SET){
 		//Drives_Error_Check();
 		Left_Frame_Controls();
 		New_Drive_Controls();
     Steering_Controls();
-	  Frame_Controls();
+	   Frame_Controls();
 		Dynamic_Width_Adjustment();
-			
-		//Shearing_Motors();
+	Shearing_Motors ();
+			//Top_Sensing_Roll();
+		Shearing_Motors();
 		}
 		else{Emergency_Stop();}
 		
@@ -1201,7 +1237,7 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	EEPROM_Read(25, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	EEPROM_Read(60, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
 	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
 	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
@@ -1819,7 +1855,7 @@ void Transmit_Motor_Torque (void)
 			Vel_Limit = 0;
 			Left_Frame_Speed = 0;
 		}
- if ((Joystick!=0)&&(Steering_Mode==ALL_WHEEL)&&(LF_Steering >=30 || RF_Steering<=-30)){	Vel_Limit = 15;}
+ if ((Joystick!=0)&&(Steering_Mode==ALL_WHEEL)&&(LF_Steering >=25 || RF_Steering<=-25)){	Vel_Limit = 15;}
 		
 		
 		if ( Steering_Mode != ALL_WHEEL ){ Left_Steering_Speed = Right_Steering_Speed = 0; }
@@ -2484,6 +2520,93 @@ float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp
 
 }
 
+float Left_Arm_PID ( float Left_Flap_Error , unsigned long long 	L_Time_Stamp )
+{
+		//dt = Time_Stamp - time;
+	
+
+
+			L_Error_Change = Left_Flap_Error - L_Prev_Error;
+			L_Error_Slope  = L_Error_Change / dt;
+			L_Error_Area   = L_Error_Area + ( L_Error_Change * dt ) ;
+			
+				
+				
+			L_P = L_Kp * Left_Flap_Error;
+			 
+			L_I	= L_Ki * L_Error_Area;						 L_I = L_I > Anti_Windup_Limit ? Anti_Windup_Limit : L_I < -Anti_Windup_Limit ? -Anti_Windup_Limit : L_I ;	
+
+			L_D = L_Kd * L_Error_Slope; 
+				
+			
+			
+			Left_Out = L_P + L_I + L_D ;
+
+			Left_Out = Left_Out > Arm_Max_Speed ? Arm_Max_Speed : Left_Out < -Arm_Max_Speed ? -Arm_Max_Speed : Left_Out;
+
+			L_Prev_Error = Left_Flap_Error;
+			
+			return Left_Out;
+
+}
+float Right_Arm_PID ( float Right_Flap_Error , unsigned long long 	RA_Time_Stamp )
+{
+		//dt = Time_Stamp - time;
+	
+
+
+			RA_Error_Change = Right_Flap_Error - RA_Prev_Error;
+			RA_Error_Slope  = RA_Error_Change / dt;
+			RA_Error_Area   = RA_Error_Area + ( RA_Error_Change * dt ) ;
+			
+				
+				
+			RA_P = RA_Kp * Right_Flap_Error;
+			 
+			RA_I	= RA_Ki * RA_Error_Area;						 RA_I = RA_I > Anti_Windup_Limit ? Anti_Windup_Limit : RA_I < -Anti_Windup_Limit ? -Anti_Windup_Limit : RA_I ;	
+
+			RA_D = RA_Kd * RA_Error_Slope; 
+				
+			
+			
+			RightArm_Out = RA_P + RA_I + RA_D ;
+
+			RightArm_Out = RightArm_Out > Arm_Max_Speed ? Arm_Max_Speed : RightArm_Out < -Arm_Max_Speed ? -Arm_Max_Speed : RightArm_Out;
+
+			RA_Prev_Error = Right_Flap_Error;
+			
+			return RightArm_Out;
+
+}
+float Pitch_Arm_PID ( float Pitch_Error , unsigned long long 	R_Time_Stamp )
+{
+		//dt = Time_Stamp - time;
+	
+
+
+			P_Error_Change = Pitch_Error - P_Prev_Error;
+			P_Error_Slope  = P_Error_Change / dt;
+			P_Error_Area   = P_Error_Area + ( P_Error_Change * dt ) ;
+			
+				
+				
+			P_P = P_Kp * Pitch_Error;
+			 
+			P_I	= P_Ki * P_Error_Area;						 P_I = P_I > Anti_Windup_Limit ? Anti_Windup_Limit : P_I < -Anti_Windup_Limit ? -Anti_Windup_Limit : P_I ;	
+
+			P_D = P_Kd * P_Error_Slope; 
+				
+			
+			
+			Pitch_Out = P_P + P_I + P_D ;
+
+			Pitch_Out = Pitch_Out > Arm_Max_Speed ? Arm_Max_Speed : Pitch_Out < -Arm_Max_Speed ? -Arm_Max_Speed : Pitch_Out;
+
+			P_Prev_Error = Pitch_Error;
+			
+			return Pitch_Out;
+
+}
 void EEPROM_Store_Data (void)
 {
 	Lower_Width_Motor_Count = Lower_Width_Motor_Value + Absolute_Position_Int[15];
@@ -2519,11 +2642,16 @@ void EEPROM_Store_Data (void)
 		
 		if ( Store_Data)
 		{
-		EEPROM_Write(25, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); HAL_Delay(10);
+		EEPROM_Write(60, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
 		}
 		else {}
+Left_Arm_Current_Pos = Left_Arm_Motor_Count;
+	Right_Arm_Current_Pos = Right_Arm_Motor_Count;
+	Pitch_Arm_Current_Pos = Pitch_Arm_Motor_Count;
 
+	L_Arm_Travel = Left_Arm_Motor_Count * 3.32;
+	R_Arm_Travel = Right_Arm_Motor_Count * 3.32;
 }
 
 void Frame_Synchronization(void)
@@ -2694,7 +2822,110 @@ void Top_Flap_Sensing(void)
 	}
 
 }
+void Top_Sensing_Roll(void)
+{
+	Array_Element    =  Speed + 4 ;
 
+	Flap_Mod_Value = Flap_Data[Array_Element];
+	Flap_Mod_Value_Right = Flap_Data_Right[Array_Element];
+
+	Front_Left_Bush  =  Flap_Mod_Value < 40 ? 0 : 1;
+	Front_Right_Bush = 	Flap_Mod_Value_Right < 40 ? 0: 1;
+	
+	Front_Bush = (Front_Left_Bush == 1 || Front_Right_Bush == 1) ? 1 : 0;
+
+	if (Mode != 3 ) // Drive / Height Adjustment Modes
+	{
+		L_Arm_Speed 		= Left_Arm_Motor_Count  > 1 ? -ARM_HOMING_SPEED : Left_Arm_Motor_Count  < -1 ? ARM_HOMING_SPEED : 0;   //0.5
+		R_Arm_Speed 		= Right_Arm_Motor_Count > 1 ? -ARM_HOMING_SPEED : Right_Arm_Motor_Count < -1 ? ARM_HOMING_SPEED : 0;    //0.5
+		Pitch_Arm_Speed 	= Pitch_Arm_Motor_Count > 1 ? -ARM_HOMING_SPEED : Pitch_Arm_Motor_Count < -1 ? ARM_HOMING_SPEED : 0;   //0.5
+		First_Sense = NULL;
+	}
+	
+	else if(Mode == 3)  // Sensing_Mode
+	{
+		if ( Front_Bush ) First_Sense = SET; // Flap Not Yet Sensed - Initially
+		
+		if (!First_Sense) // Move Down to Sense the Bush
+		{
+			L_Arm_Speed = R_Arm_Speed  =  ARM_HOMING_SPEED ; 
+            Pitch_Arm_Speed = ARM_HOMING_SPEED * 0.81; 
+		}
+	
+		else  // Bush - Sensed Succesfully
+		{
+			if ( Front_Bush ) // Gap - Not Detected
+			{
+				Flap_Error = Front_Left_Bush == 1 ? Flaps_Target - Flap_Mod_Value : Right_Arm_Current_Pos - Left_Arm_Current_Pos; 
+				L_Arm_Speed  = Left_Arm_PID ( Flap_Error , NULL );
+
+				Flap_Error_Right = Front_Right_Bush == 1 ? Flaps_Target_Right - Flap_Mod_Value_Right : Left_Arm_Current_Pos - Right_Arm_Current_Pos; 
+				R_Arm_Speed  = Right_Arm_PID ( Flap_Error_Right , NULL );
+
+				Shear_Height_Diff = L_Arm_Travel - R_Arm_Travel;
+				Shear_Roll_Angle = (atan ( Shear_Height_Diff / 2245 )) * (180/3.14);
+
+				Pitch_Compensation_mm = fabs(Shear_Height_Diff * 0.435) ;
+			// Pitch_Compensation_Rot = Pitch_Compensation_mm / 3.32 ;
+				Pitch_Compensation_mm = Shear_Roll_Angle > 0 ? -Pitch_Compensation_mm : Pitch_Compensation_mm;
+
+			// Pitch_Target = (Left_Arm_Current_Pos * 0.81 ) + Pitch_Compensation_Rot;
+				Pitch_Target = ((L_Arm_Travel + Pitch_Compensation_mm) / 3.32) * 0.81 ;
+				Pitch_Error = Pitch_Target - Pitch_Arm_Current_Pos;
+				Pitch_Arm_Speed  = Pitch_Arm_PID ( Pitch_Error , NULL );
+					
+			}
+			
+			else // Gap - Detected
+			{
+				//L_Arm_Speed 		= Left_Arm_Motor_Count  > 1 ? -ARM_HOMING_SPEED : Left_Arm_Motor_Count  < -1 ? ARM_HOMING_SPEED : 0;    //0.5
+				//R_Arm_Speed 		= Right_Arm_Motor_Count > 1 ? -ARM_HOMING_SPEED : Right_Arm_Motor_Count < -1 ? ARM_HOMING_SPEED : 0;   //0.5
+				//Pitch_Arm_Speed 	= Pitch_Arm_Motor_Count > 1 ? -ARM_HOMING_SPEED : Pitch_Arm_Motor_Count < -1 ? ARM_HOMING_SPEED : 0;   //0.5
+				L_Arm_Speed = R_Arm_Speed = Pitch_Arm_Speed = 0;
+			}
+			
+		}
+		
+		//L_Arm_Speed = R_Arm_Speed = Tri_Arm_Speed ; 
+		//Pitch_Arm_Speed = Tri_Arm_Speed * 0.81 ; 
+
+	}
+	
+	else {}
+		
+	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 20 ? 10 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 10 ? -10 : L_Arm_Speed;
+	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 30 ? 0 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 0 ? 0 : L_Arm_Speed; // Arm - Boundaries
+	
+	if( L_Arm_Speed_Temp != L_Arm_Speed )
+	{
+		for(uint8_t i = 0; i <= 2; i++)
+		{
+			Set_Motor_Velocity (12 , L_Arm_Speed );	
+		}
+		L_Arm_Speed_Temp = L_Arm_Speed ;
+	}
+	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 20 ? 10 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 10 ? -10 : R_Arm_Speed;
+	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 30 ? 0 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 0 ? 0 : R_Arm_Speed;
+	if( R_Arm_Speed_Temp != R_Arm_Speed )
+	{
+		for(uint8_t i = 0; i <= 2; i++)
+		{
+			Set_Motor_Velocity (13 , R_Arm_Speed );	
+		}
+		R_Arm_Speed_Temp = R_Arm_Speed ;
+	}
+	Pitch_Arm_Speed = Pitch_Arm_Speed > 0 && Pitch_Arm_Motor_Count > 15 ? 10 : Pitch_Arm_Speed < 0 && Pitch_Arm_Motor_Count < 5 ? -10 : Pitch_Arm_Speed;
+	Pitch_Arm_Speed = Pitch_Arm_Speed > 0 && Pitch_Arm_Motor_Count > 20 ? 0 : Pitch_Arm_Speed < 0 && Pitch_Arm_Motor_Count < 0 ? 0 : Pitch_Arm_Speed;
+	if( Pitch_Arm_Speed_Temp != Pitch_Arm_Speed )
+	{
+		for(uint8_t i = 0; i <= 2; i++)
+		{
+			Set_Motor_Velocity (14 , Pitch_Arm_Speed );	
+		}
+		Pitch_Arm_Speed_Temp = Pitch_Arm_Speed ;
+	}
+
+}
 void Dynamic_Width_Adjustment (void)
 {
 	float Width_Speed=46.5/2 - 5;
@@ -2768,10 +2999,10 @@ void Shearing_Motors (void)
 
 			for ( int i=0; i < 5; i++)
 			{			
-				Set_Motor_Velocity( 17 , 30 ); HAL_Delay(10); // CUTTER
-				Set_Motor_Velocity( 18 , 30 ); HAL_Delay(10); // MAIN PADDLE
-				Set_Motor_Velocity( 19 , 30 ); HAL_Delay(10);	// SIDE PADDLE
-				Set_Motor_Velocity( 20 , 30 ); 							// SELECTIVE
+				//Set_Motor_Velocity( 17 , 20 ); HAL_Delay(10); // SELECTIVE
+				Set_Motor_Velocity( 18 , 20 ); HAL_Delay(10); // MAIN PADDLE
+				Set_Motor_Velocity( 19 , 20 ); HAL_Delay(10);	// SIDE PADDLE
+				Set_Motor_Velocity( 20 , 20 ); 							// CUTTER
 			}
 		}
 		else 

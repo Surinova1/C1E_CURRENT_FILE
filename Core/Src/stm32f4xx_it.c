@@ -41,7 +41,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+uint16_t timer,one_timer;
+extern uint8_t Tx_Uart[2];
+extern float Rover_Voltage;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -245,7 +247,9 @@ void TIM8_TRG_COM_TIM14_IRQHandler(void)
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 0 */
   HAL_TIM_IRQHandler(&htim14);
   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 1 */
-
+Tx_Uart[0]=(Rover_Voltage>=43)?1:0;
+timer++;
+	if (timer%5==0){Tx_Uart[1]++; HAL_UART_Transmit_IT(&huart5,Tx_Uart ,sizeof(Tx_Uart));}
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
 }
 
