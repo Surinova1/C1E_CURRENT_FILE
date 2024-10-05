@@ -210,7 +210,7 @@ int Left_Wheels_Torque =0, Left_Wheels_Torque_Temp=0;
 /* 							DRIVE_WHEELS_VARIABLES 						*/
 
 float Absolute_Position[20];
-int16_t Absolute_Position_Int[20];
+int Absolute_Position_Int[20];
 
 /* 							FRAME_CONTROLS_VARIABLES 						*/
 float L_Vert_Speed=0, R_Vert_Speed=0, L_Vert_Speed_Temp=0, R_Vert_Speed_Temp=0, Contour_Speed=0, Contour_Speed_Temp=0;
@@ -236,7 +236,7 @@ bool Right_Vertical_On_Limit = 0, Contour_On_Limit=0;
 /* 							EEPROM_VARIABLES 						*/
 
 //int16_t Read_Value[28], Write_Value[28], Prev_Write_Value[28],Read_Value_1[28],Max_val=600;
-int16_t Read_Value[36], Write_Value[36], Prev_Write_Value[36],Read_Value_1[36],Start_Value,End_Value;
+int Read_Value[36], Write_Value[36], Prev_Write_Value[36],Read_Value_1[36],Start_Value,End_Value;
 bool Store_Data = 0;
 /* 							EEPROM_VARIABLES 						*/
 
@@ -273,7 +273,7 @@ uint64_t Tick_Count1 = 0, Tick_Count2 = 0;
 uint16_t Node_Id_Temp[30];
 // FET_Temperature[21];
 int Node = 0, fet = 0;
-int16_t Test_Write,Test_Read;
+int Test_Write[10],Test_Read[10];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -536,8 +536,8 @@ int main(void)
 	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 	
 	HAL_Delay(1500);
-	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
-	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);Start_Calibration_For (13, 8, 5);Start_Calibration_For (12, 8, 5);Start_Calibration_For (14, 8, 5);}
+//	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
+//	for ( uint8_t i = 1 ; i < 5; i++ ) { Start_Calibration_For (6, 8, 5);Start_Calibration_For (13, 8, 5);Start_Calibration_For (12, 8, 5);Start_Calibration_For (14, 8, 5);}
 	
 	
 	/* UART INITS */
@@ -576,24 +576,27 @@ int main(void)
 //	
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 	
-	Steering_Reset_Flag = SET;
-	LF_Speed= LR_Speed=RF_Speed=RR_Speed=0;
+//	Steering_Reset_Flag = SET;
+//	LF_Speed= LR_Speed=RF_Speed=RR_Speed=0;
 	//EEPROM_PageErase(3);
-	Read_EEPROM_Data();	
+	//Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
 //	Right_Arm_Motor_Value = 0;
 //	Pitch_Arm_Motor_Value = 0;
 //Lower_Width_Motor_Value = 0;	
 //Upper_Width_Motor_Value = 0;			
-
+Test_Write[0]=11;
+		Test_Write[1]=12;
+		Test_Write[2]=13;
+		Test_Write[3]=14;
+   EEPROM_Write(15,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+	
+   EEPROM_Read(15,0, (uint8_t *)Test_Read,sizeof(Test_Read));
 	BUZZER_OFF;
 	//Initiate_Process = SET;
 //	Error_Handler();
-    Test_Write=11;
-   EEPROM_Write(35,0, (uint8_t *)Test_Write,sizeof(Test_Write));
-	 HAL_Delay(3000);
-   EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
+    
 	//Read_EEPROM_Data();	
 	
   /* USER CODE END 2 */
@@ -602,12 +605,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		
 //		BT_State = BT_READ;
 //		Joystick_Reception();
 //		   Operations_Monitor();
 //		if(OPERATION_MONITOR_FLAG==SET){
 ////		Drives_Error_Check();
-//		EEPROM_Store_Data();
+		//EEPROM_Store_Data();
+		//Read_EEPROM_Data();
 //		New_Drive_Controls();
 //    Steering_Controls();
 //		Frame_Controls();
@@ -667,7 +672,7 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLRCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
@@ -923,8 +928,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -1149,40 +1154,43 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	//EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
-	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
-	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
-	memcpy(&Left_Arm_Motor_Value, &Read_Value[8],4 );
-	memcpy(&Right_Arm_Motor_Value, &Read_Value[12],4 );
-	memcpy(&Pitch_Arm_Motor_Value, &Read_Value[16],4 );
-	memcpy(&Right_Vertical_Motor_Value, &Read_Value[20],4 );
-	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
+	EEPROM_Read(15, 0, (uint8_t *)Test_Read, sizeof(Test_Read));
+//	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
+//	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
+//	memcpy(&Left_Arm_Motor_Value, &Read_Value[8],4 );
+//	memcpy(&Right_Arm_Motor_Value, &Read_Value[12],4 );
+//	memcpy(&Pitch_Arm_Motor_Value, &Read_Value[16],4 );
+//	memcpy(&Right_Vertical_Motor_Value, &Read_Value[20],4 );
+//	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
+	memcpy(&Left_Arm_Motor_Value, &Test_Read[0],4 );
+	memcpy(&Right_Arm_Motor_Value, &Test_Read[2],4 );
+	memcpy(&Pitch_Arm_Motor_Value, &Test_Read[4],4 );
+	
+//	if(Read_Value[0]>=600) 
+//	{memcpy(&Lower_Width_Motor_Value, &Read_Value_1[28],4 );}	 
+//  if(Read_Value[4]>=600)	
+//	{memcpy(&Upper_Width_Motor_Value, &Read_Value_1[4],4 );}
+//	if(Read_Value[8]>=600)
+//	{memcpy(&Left_Arm_Motor_Value, &Read_Value_1[8],4 );}
+//	if(Read_Value[12]>=600)
+//	{memcpy(&Right_Arm_Motor_Value, &Read_Value_1[12],4 );}
+//	if(Read_Value[16]>=600)
+//	{memcpy(&Pitch_Arm_Motor_Value, &Read_Value_1[16],4 );}
+//	if(Read_Value[20]>=600)
+//	{memcpy(&Right_Vertical_Motor_Value, &Read_Value_1[20],4 );}
+//	if(Read_Value[24]>=600)
+//	{	memcpy(&Contour_Motor_Value, &Read_Value_1[24],4 );}
 	
 	
-	if(Read_Value[0]>=600) 
-	{memcpy(&Lower_Width_Motor_Value, &Read_Value_1[28],4 );}	 
-  if(Read_Value[4]>=600)	
-	{memcpy(&Upper_Width_Motor_Value, &Read_Value_1[4],4 );}
-	if(Read_Value[8]>=600)
-	{memcpy(&Left_Arm_Motor_Value, &Read_Value_1[8],4 );}
-	if(Read_Value[12]>=600)
-	{memcpy(&Right_Arm_Motor_Value, &Read_Value_1[12],4 );}
-	if(Read_Value[16]>=600)
-	{memcpy(&Pitch_Arm_Motor_Value, &Read_Value_1[16],4 );}
-	if(Read_Value[20]>=600)
-	{memcpy(&Right_Vertical_Motor_Value, &Read_Value_1[20],4 );}
-	if(Read_Value[24]>=600)
-	{	memcpy(&Contour_Motor_Value, &Read_Value_1[24],4 );}
-	
-	
-	Lower_Width_Motor_Value 		 = Lower_Width_Motor_Value 			== -1 ? 0 : Lower_Width_Motor_Value;
-	Upper_Width_Motor_Value 		 = Upper_Width_Motor_Value 			== -1 ? 0 : Upper_Width_Motor_Value;
-	Left_Arm_Motor_Value    		 = Left_Arm_Motor_Value    			== -1 ? 0 : Left_Arm_Motor_Value;
-	Right_Arm_Motor_Value  		   = Right_Arm_Motor_Value   			== -1 ? 0 : Right_Arm_Motor_Value;
-	Pitch_Arm_Motor_Value   		 = Pitch_Arm_Motor_Value   			== -1 ? 0 : Pitch_Arm_Motor_Value;
-	Right_Vertical_Motor_Value   = Right_Vertical_Motor_Value   == -1 ? 0 : Right_Vertical_Motor_Value;
-	Contour_Motor_Value   			 = Contour_Motor_Value          == -1 ? 0 : Contour_Motor_Value;
+//	Lower_Width_Motor_Value 		 = Lower_Width_Motor_Value 			== -1 ? 0 : Lower_Width_Motor_Value;
+//	Upper_Width_Motor_Value 		 = Upper_Width_Motor_Value 			== -1 ? 0 : Upper_Width_Motor_Value;
+//	Left_Arm_Motor_Value    		 = Left_Arm_Motor_Value    			== -1 ? 0 : Left_Arm_Motor_Value;
+//	Right_Arm_Motor_Value  		   = Right_Arm_Motor_Value   			== -1 ? 0 : Right_Arm_Motor_Value;
+//	Pitch_Arm_Motor_Value   		 = Pitch_Arm_Motor_Value   			== -1 ? 0 : Pitch_Arm_Motor_Value;
+//	Right_Vertical_Motor_Value   = Right_Vertical_Motor_Value   == -1 ? 0 : Right_Vertical_Motor_Value;
+//	Contour_Motor_Value   			 = Contour_Motor_Value          == -1 ? 0 : Contour_Motor_Value;
 
 }
 void Heal_Error(uint8_t Axis_Id)
@@ -2378,41 +2386,47 @@ void EEPROM_Store_Data (void)
 {
 	Lower_Width_Motor_Count = Lower_Width_Motor_Value + Absolute_Position_Int[15];
 	Upper_Width_Motor_Count = Upper_Width_Motor_Value + Absolute_Position_Int[16];
-	memcpy(&Write_Value[0], &Start_Value, sizeof(Start_Value));
-	memcpy(&Write_Value[32], &Start_Value, sizeof(End_Value));
-	memcpy(&Write_Value[28], &Lower_Width_Motor_Count, sizeof(Lower_Width_Motor_Count));
-	memcpy(&Write_Value[4], &Upper_Width_Motor_Count, sizeof(Upper_Width_Motor_Count));
+//	memcpy(&Write_Value[0], &Start_Value, sizeof(Start_Value));
+//	memcpy(&Write_Value[32], &Start_Value, sizeof(End_Value));
+//	memcpy(&Write_Value[28], &Lower_Width_Motor_Count, sizeof(Lower_Width_Motor_Count));
+//	memcpy(&Write_Value[4], &Upper_Width_Motor_Count, sizeof(Upper_Width_Motor_Count));
 	
 	Left_Arm_Motor_Count  = Left_Arm_Motor_Value + Absolute_Position_Int[12];
 	Right_Arm_Motor_Count = Right_Arm_Motor_Value + Absolute_Position_Int[13];
 	Pitch_Arm_Motor_Count = Pitch_Arm_Motor_Value + Absolute_Position_Int[14];	
-	memcpy(&Write_Value[8], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
-	memcpy(&Write_Value[12], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
-	memcpy(&Write_Value[16], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
+//	memcpy(&Write_Value[8], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
+//	memcpy(&Write_Value[12], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
+//	memcpy(&Write_Value[16], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
+	memcpy(&Test_Write[0], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
+	memcpy(&Test_Write[2], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
+	memcpy(&Test_Write[4], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
 	
+//	
 	Right_Vertical_Motor_Count = Right_Vertical_Motor_Value + Absolute_Position_Int[6];
 	Contour_Motor_Count = Contour_Motor_Value + Absolute_Position_Int[7];	
-	memcpy(&Write_Value[20], &Right_Vertical_Motor_Count, sizeof(Right_Vertical_Motor_Count));
-	memcpy(&Write_Value[24], &Contour_Motor_Count, sizeof(Contour_Motor_Count));
+//	memcpy(&Write_Value[20], &Right_Vertical_Motor_Count, sizeof(Right_Vertical_Motor_Count));
+//	memcpy(&Write_Value[24], &Contour_Motor_Count, sizeof(Contour_Motor_Count));
 	
 	
-		for(uint8_t i =0; i <= 35; i++)
-		{
-			if(Prev_Write_Value[i] != Write_Value[i])
-			{
-				Store_Data= 1;
-				Prev_Write_Value[i] = Write_Value[i];
-			}
-			else Store_Data = 0;
-		}
+//		for(uint8_t i =0; i < 37; i++)
+//		{
+//			if(Prev_Write_Value[i] != Write_Value[i])
+//			{
+//				Store_Data= 1;
+//				Prev_Write_Value[i] = Write_Value[i];
+//			}
+//			else Store_Data = 0;
+//		}
 		
 		
-		if ( Store_Data)
-		{
-		EEPROM_Write(15, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); HAL_Delay(10);
+//		if ( Store_Data)
+//		{
+		//EEPROM_Write(15, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
+		EEPROM_Write(15, 0, (uint8_t *)Test_Write, sizeof(Test_Write));
+		HAL_Delay(5);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
-		}
-		else {}
+		//}
+		//else {}
 
 }
 
