@@ -219,76 +219,84 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* hcan)
 }
 
 /**
-* @brief I2C MSP Initialization
+* @brief FMPI2C MSP Initialization
 * This function configures the hardware resources used in this example
-* @param hi2c: I2C handle pointer
+* @param hfmpi2c: FMPI2C handle pointer
 * @retval None
 */
-void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
+void HAL_FMPI2C_MspInit(FMPI2C_HandleTypeDef* hfmpi2c)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  if(hi2c->Instance==I2C1)
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+  if(hfmpi2c->Instance==FMPI2C1)
   {
-  /* USER CODE BEGIN I2C1_MspInit 0 */
+  /* USER CODE BEGIN FMPI2C1_MspInit 0 */
 
-  /* USER CODE END I2C1_MspInit 0 */
+  /* USER CODE END FMPI2C1_MspInit 0 */
 
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    /**I2C1 GPIO Configuration
-    PB6     ------> I2C1_SCL
-    PB7     ------> I2C1_SDA
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_FMPI2C1;
+    PeriphClkInitStruct.Fmpi2c1ClockSelection = RCC_FMPI2C1CLKSOURCE_APB;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    /**FMPI2C1 GPIO Configuration
+    PC6     ------> FMPI2C1_SCL
+    PC7     ------> FMPI2C1_SDA
     */
     GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    GPIO_InitStruct.Alternate = GPIO_AF4_FMPI2C1;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /* Peripheral clock enable */
-    __HAL_RCC_I2C1_CLK_ENABLE();
-    /* I2C1 interrupt Init */
-    HAL_NVIC_SetPriority(I2C1_EV_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
-    HAL_NVIC_SetPriority(I2C1_ER_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
-  /* USER CODE BEGIN I2C1_MspInit 1 */
+    __HAL_RCC_FMPI2C1_CLK_ENABLE();
+    /* FMPI2C1 interrupt Init */
+    HAL_NVIC_SetPriority(FMPI2C1_EV_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(FMPI2C1_EV_IRQn);
+    HAL_NVIC_SetPriority(FMPI2C1_ER_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(FMPI2C1_ER_IRQn);
+  /* USER CODE BEGIN FMPI2C1_MspInit 1 */
 
-  /* USER CODE END I2C1_MspInit 1 */
+  /* USER CODE END FMPI2C1_MspInit 1 */
   }
 
 }
 
 /**
-* @brief I2C MSP De-Initialization
+* @brief FMPI2C MSP De-Initialization
 * This function freeze the hardware resources used in this example
-* @param hi2c: I2C handle pointer
+* @param hfmpi2c: FMPI2C handle pointer
 * @retval None
 */
-void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
+void HAL_FMPI2C_MspDeInit(FMPI2C_HandleTypeDef* hfmpi2c)
 {
-  if(hi2c->Instance==I2C1)
+  if(hfmpi2c->Instance==FMPI2C1)
   {
-  /* USER CODE BEGIN I2C1_MspDeInit 0 */
+  /* USER CODE BEGIN FMPI2C1_MspDeInit 0 */
 
-  /* USER CODE END I2C1_MspDeInit 0 */
+  /* USER CODE END FMPI2C1_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_I2C1_CLK_DISABLE();
+    __HAL_RCC_FMPI2C1_CLK_DISABLE();
 
-    /**I2C1 GPIO Configuration
-    PB6     ------> I2C1_SCL
-    PB7     ------> I2C1_SDA
+    /**FMPI2C1 GPIO Configuration
+    PC6     ------> FMPI2C1_SCL
+    PC7     ------> FMPI2C1_SDA
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6);
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_6|GPIO_PIN_7);
 
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
+    /* FMPI2C1 interrupt DeInit */
+    HAL_NVIC_DisableIRQ(FMPI2C1_EV_IRQn);
+    HAL_NVIC_DisableIRQ(FMPI2C1_ER_IRQn);
+  /* USER CODE BEGIN FMPI2C1_MspDeInit 1 */
 
-    /* I2C1 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
-    HAL_NVIC_DisableIRQ(I2C1_ER_IRQn);
-  /* USER CODE BEGIN I2C1_MspDeInit 1 */
-
-  /* USER CODE END I2C1_MspDeInit 1 */
+  /* USER CODE END FMPI2C1_MspDeInit 1 */
   }
 
 }

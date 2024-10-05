@@ -59,7 +59,7 @@ extern float Rover_Voltage;
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
-extern I2C_HandleTypeDef hi2c1;
+extern FMPI2C_HandleTypeDef hfmpi2c1;
 extern TIM_HandleTypeDef htim14;
 extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart5;
@@ -210,34 +210,6 @@ void TIM1_UP_TIM10_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles I2C1 event interrupt.
-  */
-void I2C1_EV_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
-
-  /* USER CODE END I2C1_EV_IRQn 0 */
-  HAL_I2C_EV_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
-
-  /* USER CODE END I2C1_EV_IRQn 1 */
-}
-
-/**
-  * @brief This function handles I2C1 error interrupt.
-  */
-void I2C1_ER_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_ER_IRQn 0 */
-
-  /* USER CODE END I2C1_ER_IRQn 0 */
-  HAL_I2C_ER_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_ER_IRQn 1 */
-
-  /* USER CODE END I2C1_ER_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM8 trigger and commutation interrupts and TIM14 global interrupt.
   */
 void TIM8_TRG_COM_TIM14_IRQHandler(void)
@@ -254,7 +226,7 @@ timer++;
 }
 
 /**
-  * @brief This function handles UART4 global interrupt.
+  * @brief This function  UART4 global interrupt.
   */
 void UART4_IRQHandler(void)
 {
@@ -307,6 +279,34 @@ void CAN2_RX1_IRQHandler(void)
   /* USER CODE BEGIN CAN2_RX1_IRQn 1 */
 
   /* USER CODE END CAN2_RX1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles FMPI2C1 event interrupt.
+  */
+void FMPI2C1_EV_IRQHandler(void)
+{
+  /* USER CODE BEGIN FMPI2C1_EV_IRQn 0 */
+
+  /* USER CODE END FMPI2C1_EV_IRQn 0 */
+  HAL_FMPI2C_EV_IRQHandler(&hfmpi2c1);
+  /* USER CODE BEGIN FMPI2C1_EV_IRQn 1 */
+
+  /* USER CODE END FMPI2C1_EV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles FMPI2C1 error interrupt.
+  */
+void FMPI2C1_ER_IRQHandler(void)
+{
+  /* USER CODE BEGIN FMPI2C1_ER_IRQn 0 */
+
+  /* USER CODE END FMPI2C1_ER_IRQn 0 */
+  HAL_FMPI2C_ER_IRQHandler(&hfmpi2c1);
+  /* USER CODE BEGIN FMPI2C1_ER_IRQn 1 */
+
+  /* USER CODE END FMPI2C1_ER_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

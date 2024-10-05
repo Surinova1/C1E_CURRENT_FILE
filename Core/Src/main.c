@@ -133,7 +133,7 @@
 CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
-I2C_HandleTypeDef hi2c1;
+FMPI2C_HandleTypeDef hfmpi2c1;
 
 TIM_HandleTypeDef htim14;
 
@@ -311,7 +311,7 @@ long P_P=0,P_I=0,P_D=0;
 float P_Kp=0,P_Ki=0,P_Kd=0;
 
 float RightArm_Out=0,RA_Error_Change=0,RA_Error_Slope=0,RA_Error_Area=0,RA_Prev_Error=0;
-
+int8_t Test_Read,Test_Write;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -322,7 +322,7 @@ static void MX_CAN2_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM14_Init(void);
-static void MX_I2C1_Init(void);
+static void MX_FMPI2C1_Init(void);
 void StartDefaultTask(void const * argument);
 void Start_HP_Tasks(void const * argument);
 void Start_LP_Tasks(void const * argument);
@@ -551,7 +551,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -571,7 +571,7 @@ int main(void)
   MX_UART4_Init();
   MX_UART5_Init();
   MX_TIM14_Init();
-  MX_I2C1_Init();
+  MX_FMPI2C1_Init();
   /* USER CODE BEGIN 2 */
 	
 	BUZZER_ON;
@@ -629,6 +629,9 @@ int main(void)
 //	{
 //	EEPROM_PageErase(i);
 //	}
+Test_Write=11;
+EEPROM_Write(35,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
 	Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
@@ -642,7 +645,7 @@ int main(void)
 	BUZZER_OFF;
 	//Initiate_Process = SET;
 //	Error_Handler();
-HAL_TIM_Base_Start_IT(&htim14);
+//HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -666,11 +669,11 @@ HAL_TIM_Base_Start_IT(&htim14);
 //  osThreadDef(DefaultTasks, StartDefaultTask, osPriorityNormal, 0, 128);
 //  DefaultTasksHandle = osThreadCreate(osThread(DefaultTasks), NULL);
 
-//  /* definition and creation of HP_Tasks */
+  /* definition and creation of HP_Tasks */
 //  osThreadDef(HP_Tasks, Start_HP_Tasks, osPriorityAboveNormal, 0, 128);
 //  HP_TasksHandle = osThreadCreate(osThread(HP_Tasks), NULL);
 
-//  /* definition and creation of LP_Tasks */
+  /* definition and creation of LP_Tasks */
 //  osThreadDef(LP_Tasks, Start_LP_Tasks, osPriorityBelowNormal, 0, 128);
 //  LP_TasksHandle = osThreadCreate(osThread(LP_Tasks), NULL);
 
@@ -687,22 +690,23 @@ HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		BT_State = BT_READ;
-		Joystick_Reception();
-	EEPROM_Store_Data();
-		   Operations_Monitor();
-		if(OPERATION_MONITOR_FLAG==SET){
-		//Drives_Error_Check();
-		Left_Frame_Controls();
-		New_Drive_Controls();
-    Steering_Controls();
-	   Frame_Controls();
-		Dynamic_Width_Adjustment();
-	Shearing_Motors ();
-			//Top_Sensing_Roll();
-		Shearing_Motors();
-		}
-		else{Emergency_Stop();}
+//		BT_State = BT_READ;
+//		Joystick_Reception();
+//	EEPROM_Store_Data();
+//		Read_EEPROM_Data();	
+//		   Operations_Monitor();
+//		if(OPERATION_MONITOR_FLAG==SET){
+//		//Drives_Error_Check();
+//		Left_Frame_Controls();
+//		New_Drive_Controls();
+//    Steering_Controls();
+//	   Frame_Controls();
+//		Dynamic_Width_Adjustment();
+//	Shearing_Motors ();
+//			//Top_Sensing_Roll();
+//		Shearing_Motors();
+//		}
+//		else{Emergency_Stop();}
 		
 		//Position_Flap_Sensing();
 		
@@ -869,36 +873,43 @@ static void MX_CAN2_Init(void)
 }
 
 /**
-  * @brief I2C1 Initialization Function
+  * @brief FMPI2C1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C1_Init(void)
+static void MX_FMPI2C1_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+  /* USER CODE BEGIN FMPI2C1_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+  /* USER CODE END FMPI2C1_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+  /* USER CODE BEGIN FMPI2C1_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  /* USER CODE END FMPI2C1_Init 1 */
+  hfmpi2c1.Instance = FMPI2C1;
+  hfmpi2c1.Init.Timing = 0xC0000E12;
+  hfmpi2c1.Init.OwnAddress1 = 0;
+  hfmpi2c1.Init.AddressingMode = FMPI2C_ADDRESSINGMODE_7BIT;
+  hfmpi2c1.Init.DualAddressMode = FMPI2C_DUALADDRESS_DISABLE;
+  hfmpi2c1.Init.OwnAddress2 = 0;
+  hfmpi2c1.Init.OwnAddress2Masks = FMPI2C_OA2_NOMASK;
+  hfmpi2c1.Init.GeneralCallMode = FMPI2C_GENERALCALL_DISABLE;
+  hfmpi2c1.Init.NoStretchMode = FMPI2C_NOSTRETCH_DISABLE;
+  if (HAL_FMPI2C_Init(&hfmpi2c1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C1_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+  /** Configure Analogue filter
+  */
+  if (HAL_FMPI2CEx_ConfigAnalogFilter(&hfmpi2c1, FMPI2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN FMPI2C1_Init 2 */
+
+  /* USER CODE END FMPI2C1_Init 2 */
 
 }
 
@@ -1237,7 +1248,7 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	EEPROM_Read(60, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	EEPROM_Read(35, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
 	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
 	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
@@ -2247,7 +2258,7 @@ void Operations_Monitor(void)
 		
 		for (uint8_t i = 1; i < 27; i++)
 		{
-			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20 && i!=6)
+			if(i!=5 && i!=17)
 			{
 			//if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 			
@@ -2257,9 +2268,9 @@ void Operations_Monitor(void)
 		//	if (FET_Temperature[i] > 95) { FET_TEMP_FLAG = NULL; }
 		}
 		
-		for (uint8_t i = 1; i < 17; i++)
+		for (uint8_t i = 1; i < 21; i++)
 		{
-			if(i!=5 && i!=17&& i!=18&& i!=19&&i!=20 && i!=6){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
+			if(i!=5 && i!=17){if (Axis_State[i] != 8) { AXIS_STATE_FLAG = NULL; }
 		}
 	}
 		if((Right_Vertical_Motor_Count>=200 && Right_Vertical_Motor_Count<=210)||(Right_Vertical_Motor_Count>=210)||(Right_Vertical_Motor_Count<=-200 && Right_Vertical_Motor_Count>=-210) || (Right_Vertical_Motor_Count<=-210) ) Vertical_Limit=NULL;
@@ -2290,10 +2301,10 @@ void Emergency_Stop(void)
 		
 		if (AXIS_STATE_FLAG == NULL)
 		{
-			for (uint8_t i = 1; i < 17; i++)
+			for (uint8_t i = 1; i < 21; i++)
 				{
 					
-					if(i!=5 && i!=17&& i!=18&& i!=19 &&i!=20 && i!= 6){
+					if(i!=5 && i!=17){
 						while (Axis_State[i] != 8)
 					{
 						Reboot(i);
@@ -2308,7 +2319,7 @@ void Emergency_Stop(void)
 		if (HEARTBEAT_FLAG == NULL)
 		{
 			for (uint8_t i = 1; i < 27; i++)
-			{if(i!=5 && i!=17 && i!=18&& i!=19&&i!=20 && i!=6){
+			{if(i!=5 && i!=17){
 					while (Node_Id[i] == Node_Id_Temp[i]){ //Node++;
 					}
 						Node++;
@@ -2642,7 +2653,7 @@ void EEPROM_Store_Data (void)
 		
 		if ( Store_Data)
 		{
-		EEPROM_Write(60, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
+		EEPROM_Write(35, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
 		}
 		else {}
