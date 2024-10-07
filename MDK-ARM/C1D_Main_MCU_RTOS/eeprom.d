@@ -36,17 +36,3 @@ c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fm
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h
 c1d_main_mcu_rtos\eeprom.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 c1d_main_mcu_rtos\eeprom.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-c1d_main_mcu_rtos\eeprom.o: ../Core/Inc/FreeRTOSConfig.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
-c1d_main_mcu_rtos\eeprom.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h

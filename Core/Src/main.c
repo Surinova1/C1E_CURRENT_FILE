@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -109,7 +108,7 @@
 	#define					WIDTH_EXTEND			5
 	#define					FRONT_WHEEL				6
 	#define					WIDTH_SPEED				10
-	#define					WIDE_ANGLE				5
+	#define					WIDE_ANGLE				3
 	#define					SHRINK_ANGLE			5
 	#define					Anti_Windup_Limit		2
 	#define					V_LIMIT							70
@@ -140,9 +139,6 @@ TIM_HandleTypeDef htim14;
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 
-osThreadId DefaultTasksHandle;
-osThreadId HP_TasksHandle;
-osThreadId LP_TasksHandle;
 /* USER CODE BEGIN PV */
 /* 							BT_VARIABLES 						*/
 uint8_t BT_Rx[8], BT_Count=0, RxBuff[8];
@@ -181,7 +177,7 @@ bool Left_IMU_State=1, Initiate_Process=0;
 uint16_t Track_Width = 1730, Min_Track_Width = 1730, Zero_Turn_Angle = 33, Wheel_Base = 900;
 uint16_t Steer_Angle[5];
 float LF_Steering=0, LR_Steering=0, RF_Steering=0, RR_Steering=0;	
-float LF_HomePos =9, LR_HomePos= 680 , RF_HomePos= 451 , RR_HomePos = 619;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
+float LF_HomePos =9, LR_HomePos= 694 , RF_HomePos= 451 , RR_HomePos = 619;	// -->	HOME POSITIONS LF_HomePos = 190, LR_HomePos= 87 , RF_HomePos= 220 , RR_HomePos = 623;
 float LF_Speed=0, LR_Speed=0, RF_Speed=0, RR_Speed=0 , LF_Speed_Temp =0, LR_Speed_Temp =0 , RF_Speed_Temp=0, RR_Speed_Temp=0, LF_Error=0, LR_Error=0, RF_Error=0, RR_Error=0;		
 _Bool Steering_Reset_Flag = SET , LF_SET = NULL , LR_SET = NULL, RF_SET = NULL, RR_SET = NULL , BUZZ_SW = SET;
 float Inner_Angle =0 , Outer_Angle=0, Prev_Inner_Angle =0 , AW_Angle=0 , Outer_Angle_2=0 , LS_Angle=0, RS_Angle=0;
@@ -323,10 +319,6 @@ static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_FMPI2C1_Init(void);
-void StartDefaultTask(void const * argument);
-void Start_HP_Tasks(void const * argument);
-void Start_LP_Tasks(void const * argument);
-
 /* USER CODE BEGIN PFP */
 
 float New_Sensor_Pos(double Sensor_Value, double Zero_Pos);
@@ -629,10 +621,10 @@ int main(void)
 //	{
 //	EEPROM_PageErase(i);
 //	}
-Test_Write=11;
-EEPROM_Write(35,0, (uint8_t *)Test_Write,sizeof(Test_Write));
-EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
-	Read_EEPROM_Data();	
+//Test_Write=11;
+//EEPROM_Write(35,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+//EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
+//	Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
 //	Right_Arm_Motor_Value = 0;
@@ -648,58 +640,20 @@ EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
 //HAL_TIM_Base_Start_IT(&htim14);
   /* USER CODE END 2 */
 
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-
-  /* Create the thread(s) */
-  /* definition and creation of DefaultTasks */
-//  osThreadDef(DefaultTasks, StartDefaultTask, osPriorityNormal, 0, 128);
-//  DefaultTasksHandle = osThreadCreate(osThread(DefaultTasks), NULL);
-
-  /* definition and creation of HP_Tasks */
-//  osThreadDef(HP_Tasks, Start_HP_Tasks, osPriorityAboveNormal, 0, 128);
-//  HP_TasksHandle = osThreadCreate(osThread(HP_Tasks), NULL);
-
-  /* definition and creation of LP_Tasks */
-//  osThreadDef(LP_Tasks, Start_LP_Tasks, osPriorityBelowNormal, 0, 128);
-//  LP_TasksHandle = osThreadCreate(osThread(LP_Tasks), NULL);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* Start scheduler */
-  //osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//		BT_State = BT_READ;
-//		Joystick_Reception();
+		BT_State = BT_READ;
+		Joystick_Reception();
 //	EEPROM_Store_Data();
 //		Read_EEPROM_Data();	
-//		   Operations_Monitor();
+	//	   Operations_Monitor();
 //		if(OPERATION_MONITOR_FLAG==SET){
 //		//Drives_Error_Check();
 //		Left_Frame_Controls();
 //		New_Drive_Controls();
-//    Steering_Controls();
+    Steering_Controls();
 //	   Frame_Controls();
 //		Dynamic_Width_Adjustment();
 //	Shearing_Motors ();
@@ -3083,109 +3037,6 @@ void Position_Flap_Sensing(void)
 //if ( Motor_Velocity[8] != LF_Speed ) 
 
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the DefaultTasks thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  while(1)
-  {
-	//    Manual_Controls();
-		// Manual_Wheel_Control();
-		//if(Joystick == 0 )
-		Joystick_Reception();
-		EEPROM_Store_Data();
-//		if ( Manual_Torque_Temp != Manual_Torque )
-//		{
-//			for(uint8_t i = 1; i < 5 ; i++ ) {Set_Motor_Torque ( i , Manual_Torque); HAL_Delay(10);} 
-//			Manual_Torque_Temp = Manual_Torque;
-//		}
-		
-
-  		Shearing_Motors();
-//		Buzz_Switch = (Frame_Buzz_Switch == 1) ? 1 : 0;
-//		if ( Buzz_Switch == 1 ) {HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_SET);HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_SET);	}
-//		else HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_SET);HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_SET);	;
-//						Frame_Controls();
-
-    HAL_Delay(10);
-  }
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_Start_HP_Tasks */
-/**
-* @brief Function implementing the HP_Tasks thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Start_HP_Tasks */
-void Start_HP_Tasks(void const * argument)
-{
-  /* USER CODE BEGIN Start_HP_Tasks */
-  /* Infinite loop */
-  while(1)
-  {
-		Position_Flap_Sensing();
-//  	Top_Flap_Sensing();
-//		Drive_Wheel_Controls();
-		Steering_Controls();
-//		Dynamic_Width_Adjustment();
-	//	Frame_Controls();
-	New_Drive_Controls();
-		//Left_Frame_Controls();
-    HAL_Delay(10); 
-  }
-  /* USER CODE END Start_HP_Tasks */
-}
-
-/* USER CODE BEGIN Header_Start_LP_Tasks */
-/**
-* @brief Function implementing the LP_Tasks thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Start_LP_Tasks */
-void Start_LP_Tasks(void const * argument)
-{
-  /* USER CODE BEGIN Start_LP_Tasks */
-  /* Infinite loop */
-  while(1)
-  {
-		HAL_Delay(100);
-		Battery_Status_Indication();
-		Drives_Error_Check();
-  }
-  /* USER CODE END Start_LP_Tasks */
-}
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

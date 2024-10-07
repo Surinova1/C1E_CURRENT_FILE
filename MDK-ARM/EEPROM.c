@@ -20,7 +20,6 @@
 #include "EEPROM.h"
 #include "math.h"
 #include "string.h"
-#include "cmsis_os.h"
 // Define the I2C
 //extern FMPI2C_HandleTypeDef hi2c1;
 extern FMPI2C_HandleTypeDef hfmpi2c1;
