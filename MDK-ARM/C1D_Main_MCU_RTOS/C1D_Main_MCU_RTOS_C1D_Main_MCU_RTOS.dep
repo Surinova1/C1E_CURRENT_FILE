@@ -1,6 +1,6 @@
 Dependencies for Project 'C1D_Main_MCU_RTOS', Target 'C1D_Main_MCU_RTOS': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (startup_stm32f446xx.s)(0x67013743)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"--pd "__UVISION_VERSION SETA 535" --pd "_RTE_ SETA 1" --pd "STM32F446xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f446xx.lst --xref -o c1d_main_mcu_rtos\startup_stm32f446xx.o --depend c1d_main_mcu_rtos\startup_stm32f446xx.d)
+F (startup_stm32f446xx.s)(0x6703B8C3)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"--pd "__UVISION_VERSION SETA 535" --pd "_RTE_ SETA 1" --pd "STM32F446xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f446xx.lst --xref -o c1d_main_mcu_rtos\startup_stm32f446xx.o --depend c1d_main_mcu_rtos\startup_stm32f446xx.d)
 F (.\EEPROM.c)(0x67011F04)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\eeprom.o --omf_browse c1d_main_mcu_rtos\eeprom.crf --depend c1d_main_mcu_rtos\eeprom.d)
 I (../Core/Inc/EEPROM.h)(0x66EAD0CF)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602546A6)
@@ -38,7 +38,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x667165E2)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x667165E2)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x602546A0)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602546A6)
-F (../Core/Src/main.c)(0x6701482A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\main.o --omf_browse c1d_main_mcu_rtos\main.crf --depend c1d_main_mcu_rtos\main.d)
+F (../Core/Src/main.c)(0x6703C125)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\main.o --omf_browse c1d_main_mcu_rtos\main.crf --depend c1d_main_mcu_rtos\main.d)
 I (../Core/Inc/main.h)(0x66EAD0CF)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x667165E2)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x67011F03)
@@ -79,7 +79,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x602546A4)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x602546A0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x6025469C)
 I (../Core/Inc/EEPROM.h)(0x66EAD0CF)
-F (../Core/Src/stm32f4xx_it.c)(0x67012DF9)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\stm32f4xx_it.o --omf_browse c1d_main_mcu_rtos\stm32f4xx_it.crf --depend c1d_main_mcu_rtos\stm32f4xx_it.d)
+F (../Core/Src/stm32f4xx_it.c)(0x6703B8BD)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\stm32f4xx_it.o --omf_browse c1d_main_mcu_rtos\stm32f4xx_it.crf --depend c1d_main_mcu_rtos\stm32f4xx_it.d)
 I (../Core/Inc/main.h)(0x66EAD0CF)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x667165E2)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x67011F03)
@@ -114,43 +114,9 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x667165E2)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x667165E2)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x667165E2)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x667165E2)
-I (../Core/Inc/stm32f4xx_it.h)(0x67012DF9)
+I (../Core/Inc/stm32f4xx_it.h)(0x6703B8BE)
 F (../Core/Src/stm32f4xx_hal_msp.c)(0x67012DF9)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\stm32f4xx_hal_msp.o --omf_browse c1d_main_mcu_rtos\stm32f4xx_hal_msp.crf --depend c1d_main_mcu_rtos\stm32f4xx_hal_msp.d)
 I (../Core/Inc/main.h)(0x66EAD0CF)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x667165E2)
-I (../Core/Inc/stm32f4xx_hal_conf.h)(0x67011F03)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h)(0x667165E2)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x667165D6)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h)(0x667165D6)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x667165E1)
-I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602546A6)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x667165E1)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x667165E1)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x667165E1)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x667165E1)
-I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x667165D6)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x667165E2)
-I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x602546A6)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x667165E2)
-I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x667165E2)
-F (../Core/Src/stm32f4xx_hal_timebase_tim.c)(0x66EAD0CF)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_C1D_Main_MCU_RTOS-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include"-I"C:\Users\Firmware LAP\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F446xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F446xx-o c1d_main_mcu_rtos\stm32f4xx_hal_timebase_tim.o --omf_browse c1d_main_mcu_rtos\stm32f4xx_hal_timebase_tim.crf --depend c1d_main_mcu_rtos\stm32f4xx_hal_timebase_tim.d)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x667165E2)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x67011F03)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x667165E2)

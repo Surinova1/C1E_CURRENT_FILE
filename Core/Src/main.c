@@ -527,13 +527,13 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 	
-	BUZZER_ON;
-	HAL_Delay(1000);
-	HAL_CAN_Start(&hcan1);
-	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-	
-	HAL_CAN_Start(&hcan2);HAL_Delay(1000);
-	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
+//	BUZZER_ON;
+//	HAL_Delay(1000);
+//	HAL_CAN_Start(&hcan1);
+//	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
+//	
+//	HAL_CAN_Start(&hcan2);HAL_Delay(1000);
+//	HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
 	
 	HAL_Delay(1500);
 //	for ( uint8_t i = 6 ; i < 25 ; i++ ) {	Start_Calibration_For (i, 8, 10); }
@@ -586,33 +586,54 @@ int main(void)
 //	Pitch_Arm_Motor_Value = 0;
 //Lower_Width_Motor_Value = 0;	
 //Upper_Width_Motor_Value = 0;			
-Test_Write[0]=11;
-		Test_Write[1]=12;
-		Test_Write[2]=13;
-		Test_Write[3]=14;
-   EEPROM_Write(15,0, (uint8_t *)Test_Write,sizeof(Test_Write));
-	
-   EEPROM_Read(15,0, (uint8_t *)Test_Read,sizeof(Test_Read));
-	BUZZER_OFF;
+//Test_Write[0]=11;
+//		Test_Write[1]=12;
+//		Test_Write[2]=13;
+//		Test_Write[3]=14;
+//	BUZZER_OFF;
+//for(int a=0;a<100;a++){
+//	for(int i=0;i<6;i++){
+//	Test_Write[i]=a;
+//   EEPROM_Write(15,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+//   EEPROM_Read(15,0, (uint8_t *)Test_Read,sizeof(Test_Read));
+//	 }
+//HAL_Delay(100);}
+//	
+
+
 	//Initiate_Process = SET;
 //	Error_Handler();
     
 	//Read_EEPROM_Data();	
-	
+//	for(int a=0;a<37;a++)
+//{
+//	Write_Value[a]=a;
+//}
+// EEPROM_Write(15,0, (uint8_t *)Write_Value,sizeof(Write_Value));
+//		EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//		Test_Write[1]=12;
+//		Test_Write[2]=13;
+//		Test_Write[3]=14;
+//   EEPROM_Write(15,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+	
+//   EEPROM_Read(15,0, (uint8_t *)Test_Read,sizeof(Test_Read));
+		
+		count++;
+		/////////////////////////////////////////////////////
 		
 //		BT_State = BT_READ;
 //		Joystick_Reception();
 //		   Operations_Monitor();
 //		if(OPERATION_MONITOR_FLAG==SET){
 ////		Drives_Error_Check();
-		//EEPROM_Store_Data();
-		//Read_EEPROM_Data();
+		EEPROM_Store_Data();
+		Read_EEPROM_Data();
 //		New_Drive_Controls();
 //    Steering_Controls();
 //		Frame_Controls();
@@ -1154,9 +1175,9 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	//EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	EEPROM_Read(15, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
-	EEPROM_Read(15, 0, (uint8_t *)Test_Read, sizeof(Test_Read));
+	//PROM_Read(15, 0, (uint8_t *)Test_Read, sizeof(Test_Read));
 //	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
 //	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
 //	memcpy(&Left_Arm_Motor_Value, &Read_Value[8],4 );
@@ -1164,9 +1185,9 @@ void Read_EEPROM_Data(void)
 //	memcpy(&Pitch_Arm_Motor_Value, &Read_Value[16],4 );
 //	memcpy(&Right_Vertical_Motor_Value, &Read_Value[20],4 );
 //	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
-	memcpy(&Left_Arm_Motor_Value, &Test_Read[0],4 );
-	memcpy(&Right_Arm_Motor_Value, &Test_Read[2],4 );
-	memcpy(&Pitch_Arm_Motor_Value, &Test_Read[4],4 );
+//	memcpy(&Left_Arm_Motor_Value, &Test_Read[0],4 );
+//	memcpy(&Right_Arm_Motor_Value, &Test_Read[2],4 );
+//	memcpy(&Pitch_Arm_Motor_Value, &Test_Read[4],4 );
 	
 //	if(Read_Value[0]>=600) 
 //	{memcpy(&Lower_Width_Motor_Value, &Read_Value_1[28],4 );}	 
@@ -2384,29 +2405,32 @@ float Contour_PID ( float Contour_Val , unsigned long long 	C_Time_Stamp )
 
 void EEPROM_Store_Data (void)
 {
-	Lower_Width_Motor_Count = Lower_Width_Motor_Value + Absolute_Position_Int[15];
-	Upper_Width_Motor_Count = Upper_Width_Motor_Value + Absolute_Position_Int[16];
+	for(int i=0;i<32;i++){
+	Write_Value[i]=10;}
+	
+//	Lower_Width_Motor_Count = Lower_Width_Motor_Value + Absolute_Position_Int[15];
+//	Upper_Width_Motor_Count = Upper_Width_Motor_Value + Absolute_Position_Int[16];
 //	memcpy(&Write_Value[0], &Start_Value, sizeof(Start_Value));
 //	memcpy(&Write_Value[32], &Start_Value, sizeof(End_Value));
 //	memcpy(&Write_Value[28], &Lower_Width_Motor_Count, sizeof(Lower_Width_Motor_Count));
 //	memcpy(&Write_Value[4], &Upper_Width_Motor_Count, sizeof(Upper_Width_Motor_Count));
 	
-	Left_Arm_Motor_Count  = Left_Arm_Motor_Value + Absolute_Position_Int[12];
-	Right_Arm_Motor_Count = Right_Arm_Motor_Value + Absolute_Position_Int[13];
-	Pitch_Arm_Motor_Count = Pitch_Arm_Motor_Value + Absolute_Position_Int[14];	
+//	Left_Arm_Motor_Count  = Left_Arm_Motor_Value + Absolute_Position_Int[12];
+//	Right_Arm_Motor_Count = Right_Arm_Motor_Value + Absolute_Position_Int[13];
+//	Pitch_Arm_Motor_Count = Pitch_Arm_Motor_Value + Absolute_Position_Int[14];	
 //	memcpy(&Write_Value[8], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
 //	memcpy(&Write_Value[12], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
 //	memcpy(&Write_Value[16], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
-	memcpy(&Test_Write[0], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
-	memcpy(&Test_Write[2], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
-	memcpy(&Test_Write[4], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
-	
+//	memcpy(&Test_Write[0], &Left_Arm_Motor_Count, sizeof(Left_Arm_Motor_Count));
+//	memcpy(&Test_Write[2], &Right_Arm_Motor_Count, sizeof(Right_Arm_Motor_Count));
+//	memcpy(&Test_Write[4], &Pitch_Arm_Motor_Count, sizeof(Pitch_Arm_Motor_Count));
 //	
-	Right_Vertical_Motor_Count = Right_Vertical_Motor_Value + Absolute_Position_Int[6];
-	Contour_Motor_Count = Contour_Motor_Value + Absolute_Position_Int[7];	
+//	
+//	Right_Vertical_Motor_Count = Right_Vertical_Motor_Value + Absolute_Position_Int[6];
+//	Contour_Motor_Count = Contour_Motor_Value + Absolute_Position_Int[7];	
 //	memcpy(&Write_Value[20], &Right_Vertical_Motor_Count, sizeof(Right_Vertical_Motor_Count));
 //	memcpy(&Write_Value[24], &Contour_Motor_Count, sizeof(Contour_Motor_Count));
-	
+
 	
 //		for(uint8_t i =0; i < 37; i++)
 //		{
@@ -2419,14 +2443,14 @@ void EEPROM_Store_Data (void)
 //		}
 		
 		
-//		if ( Store_Data)
-//		{
-		//EEPROM_Write(15, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
-		EEPROM_Write(15, 0, (uint8_t *)Test_Write, sizeof(Test_Write));
-		HAL_Delay(5);
+//if (Store_Data)
+		{
+		EEPROM_Write(15, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
+	//	EEPROM_Write(15, 0, (uint8_t *)Test_Write, sizeof(Test_Write));
+	HAL_Delay(500);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
-		//}
-		//else {}
+		}
+//else {}
 
 }
 
@@ -2733,27 +2757,6 @@ void Position_Flap_Sensing(void)
 //if ( Motor_Velocity[8] != LF_Speed ) 
 
 /* USER CODE END 4 */
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.
