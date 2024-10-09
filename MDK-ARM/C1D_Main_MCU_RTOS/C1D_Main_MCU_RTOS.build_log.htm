@@ -22,12 +22,25 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 E:\C1E_CURRENT_FILE\MDK-ARM\C1D_Main_MCU_RTOS.uvprojx
-Project File Date:  10/07/2024
+Project File Date:  10/09/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'C1D_Main_MCU_RTOS'
-"C1D_Main_MCU_RTOS\C1D_Main_MCU_RTOS.axf" - 0 Error(s), 0 Warning(s).
+compiling main.c...
+../Core/Src/main.c(2890): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				Pitch_Compensation_mm = fabs(Shear_Height_Diff * 0.435) ;
+../Core/Src/main.c(2895): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				Pitch_Target = ((L_Arm_Travel + Pitch_Compensation_mm) / 3.32) * 0.81 ;
+../Core/Src/main.c(3062): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			Arm_Angle = (FL_Angle /3.2) -1 ;//3.2
+../Core/Src/main.c(3065): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  			Pitch_Arm_Pos = Tri_Arm_Pos * 0.6082 ;
+../Core/Src/main.c: 4 warnings, 0 errors
+linking...
+Program Size: Code=19098 RO-data=510 RW-data=1252 ZI-data=2940  
+FromELF: creating hex file...
+"C1D_Main_MCU_RTOS\C1D_Main_MCU_RTOS.axf" - 0 Error(s), 4 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +64,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.6.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

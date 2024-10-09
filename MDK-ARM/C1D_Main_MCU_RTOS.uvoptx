@@ -26,7 +26,7 @@
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
-      <CLKADS>8000000</CLKADS>
+      <CLKADS>25000000</CLKADS>
       <OPTTT>
         <gFlags>1</gFlags>
         <BeepAtEnd>1</BeepAtEnd>
@@ -313,7 +313,7 @@
         <Ww>
           <count>32</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Joystick</ItemText>
+          <ItemText>Joystick,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
@@ -705,6 +705,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>BT_State,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>111</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Steering_Mode</ItemText>
+        </Ww>
+        <Ww>
+          <count>112</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Right_Arm_Motor_Count,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>113</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Left_Arm_Motor_Count,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -831,6 +846,31 @@
           <count>24</count>
           <WinNumber>2</WinNumber>
           <ItemText>Test_Write,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Pitch_Arm_Motor_Count,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Mode</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>L_Arm_Speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Shearing,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>test,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

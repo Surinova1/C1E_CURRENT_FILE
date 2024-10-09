@@ -308,6 +308,7 @@ float P_Kp=0,P_Ki=0,P_Kd=0;
 
 float RightArm_Out=0,RA_Error_Change=0,RA_Error_Slope=0,RA_Error_Area=0,RA_Prev_Error=0;
 int8_t Test_Read,Test_Write;
+int test;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -356,6 +357,7 @@ void Left_Frame_Controls (void);
  void Operations_Monitor(void);
  float Left_Frame_PID ( float Left_Error_Value , unsigned long long 	L_Time_Stamp );
  void Top_Sensing_Roll(void);
+ void Manual_Sensing_Control(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -622,8 +624,9 @@ int main(void)
 //	EEPROM_PageErase(i);
 //	}
 //Test_Write=11;
-//EEPROM_Write(35,0, (uint8_t *)Test_Write,sizeof(Test_Write));
-//EEPROM_Read(35,0, (uint8_t *)Test_Read,sizeof(Test_Read));
+//EEPROM_Write(25,0, (uint8_t *)Test_Write,sizeof(Test_Write));
+//HAL_Delay(2000);
+//EEPROM_Read(25,0, (uint8_t *)Test_Read,sizeof(Test_Read));
 //	Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
@@ -644,24 +647,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		BT_State = BT_READ;
-		Joystick_Reception();
+		test++;
+		HAL_Delay(500);
+//		BT_State = BT_READ;
+//		Joystick_Reception();
 //	EEPROM_Store_Data();
-//		Read_EEPROM_Data();	
-	//	   Operations_Monitor();
+////		Read_EEPROM_Data();	
+//		   Operations_Monitor();
 //		if(OPERATION_MONITOR_FLAG==SET){
 //		//Drives_Error_Check();
 //		Left_Frame_Controls();
 //		New_Drive_Controls();
-    Steering_Controls();
+//    Steering_Controls();
 //	   Frame_Controls();
-//		Dynamic_Width_Adjustment();
-//	Shearing_Motors ();
+//			Dynamic_Width_Adjustment();
+//	  Shearing_Motors ();
+////			Manual_Sensing_Control();
 //			//Top_Sensing_Roll();
-//		Shearing_Motors();
+////		Shearing_Motors();
 //		}
 //		else{Emergency_Stop();}
-		
+//		
 		//Position_Flap_Sensing();
 		
     /* USER CODE END WHILE */
@@ -692,8 +698,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 180;
+  RCC_OscInitStruct.PLL.PLLM = 15;
+  RCC_OscInitStruct.PLL.PLLN = 216;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
@@ -1340,6 +1346,57 @@ void Manual_Wheel_Control(void)
 		}
 	
 	}
+}
+
+void Manual_Sensing_Control(void)
+{
+if(Mode==1)
+{
+	L_Arm_Speed=(Left_Arm_Motor_Count<-1)?5:Left_Arm_Motor_Count>1?-5:0;
+		R_Arm_Speed=(Right_Arm_Motor_Count<-1)?5:Right_Arm_Motor_Count>1?-5:0;
+		Pitch_Arm_Speed=(Pitch_Arm_Motor_Count<-1)?5:Pitch_Arm_Motor_Count>1?-5:0;
+}
+else if(Mode==2)
+{
+	//if(Joystick!=Joystick_Temp){
+	if(Joystick==3) {L_Arm_Speed= R_Arm_Speed=5;Pitch_Arm_Speed=4;}
+	else if( Joystick==4) {L_Arm_Speed= R_Arm_Speed=-5;Pitch_Arm_Speed=4;}
+	else {L_Arm_Speed= R_Arm_Speed=Pitch_Arm_Speed=0;}
+	//Joystick_Temp=Joystick;
+//}
+}
+
+else if(Mode==3){
+	//if(Joystick!=Joystick_Temp){
+	if(Joystick==3) {L_Arm_Speed=5; R_Arm_Speed=-5;}
+	else if(Joystick==4) {L_Arm_Speed=-5; R_Arm_Speed=5;}
+	else {L_Arm_Speed= R_Arm_Speed=Pitch_Arm_Speed=0;}
+	//	Joystick_Temp=Joystick;
+//}
+}
+
+else{}
+
+L_Arm_Speed=((Left_Arm_Motor_Count>=20)||(Left_Arm_Motor_Count<=-20))?0:L_Arm_Speed;
+R_Arm_Speed=((Right_Arm_Motor_Count>=20)||(Right_Arm_Motor_Count<=-20))?0:R_Arm_Speed;
+Pitch_Arm_Speed=((Pitch_Arm_Motor_Count>=16)||(Pitch_Arm_Motor_Count<=-16))?0:Pitch_Arm_Speed;
+
+if(L_Arm_Speed!=L_Arm_Speed_Temp){
+	Set_Motor_Velocity( 12,L_Arm_Speed);
+	L_Arm_Speed_Temp=L_Arm_Speed;
+}
+
+if(R_Arm_Speed!=R_Arm_Speed_Temp){
+	Set_Motor_Velocity( 13,R_Arm_Speed);
+	R_Arm_Speed_Temp=R_Arm_Speed;
+}
+
+if(Pitch_Arm_Speed!=Pitch_Arm_Speed_Temp){
+	Set_Motor_Velocity( 13,Pitch_Arm_Speed);
+	Pitch_Arm_Speed_Temp=Pitch_Arm_Speed;
+}
+
+
 }
 void Manual_Controls (void)
 {
@@ -2607,7 +2664,7 @@ void EEPROM_Store_Data (void)
 		
 		if ( Store_Data)
 		{
-		EEPROM_Write(35, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
+//		EEPROM_Write(35, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
 		}
 		else {}
