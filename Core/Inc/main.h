@@ -63,6 +63,8 @@ void Error_Handler(void);
 #define LED_2_GPIO_Port GPIOC
 #define UART4_State_Pin GPIO_PIN_2
 #define UART4_State_GPIO_Port GPIOA
+#define B1_Pin GPIO_PIN_0
+#define B1_GPIO_Port GPIOB
 #define Buzzer_1_Pin GPIO_PIN_1
 #define Buzzer_1_GPIO_Port GPIOB
 #define Buzzer_2_Pin GPIO_PIN_2

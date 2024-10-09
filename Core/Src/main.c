@@ -40,9 +40,9 @@
 /* USER CODE BEGIN PD */
 	#define					SET									1
 	#define					NULL								0
-	#define					BUZZER_ON						HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_RESET);			HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_RESET);	
-	#define					BUZZER_OFF					HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_SET);			HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_SET);	
-	#define					BUZZER_TOGGLE				HAL_GPIO_TogglePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin );					HAL_GPIO_TogglePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin);
+	#define					BUZZER_ON						HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_RESET);			HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_RESET);	    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);
+	#define					BUZZER_OFF					HAL_GPIO_WritePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin, GPIO_PIN_SET);			HAL_GPIO_WritePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin, GPIO_PIN_SET);	        HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+	#define					BUZZER_TOGGLE				HAL_GPIO_TogglePin(Buzzer_1_GPIO_Port,Buzzer_1_Pin );					HAL_GPIO_TogglePin(Buzzer_2_GPIO_Port,Buzzer_2_Pin); HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_0);
 	#define					STOP_WHEELS					for(uint8_t i = 1; i <= 4; i++){Set_Motor_Torque(i, 0);}
 	
 	#define					LSB												0
@@ -132,7 +132,7 @@
 CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
-FMPI2C_HandleTypeDef hfmpi2c1;
+I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim14;
 
@@ -319,7 +319,7 @@ static void MX_CAN2_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM14_Init(void);
-static void MX_FMPI2C1_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
 float New_Sensor_Pos(double Sensor_Value, double Zero_Pos);
@@ -565,7 +565,7 @@ int main(void)
   MX_UART4_Init();
   MX_UART5_Init();
   MX_TIM14_Init();
-  MX_FMPI2C1_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 	
 	BUZZER_ON;
@@ -589,7 +589,6 @@ int main(void)
 	
 //	Left_IMU_State = ( Sensor_Id[1] == 0 || Sensor_Id[2]  == 0 ) ? NULL : SET ;
 //	if ( !Left_IMU_State ) Error_Handler();
-	
 //	for(uint8_t i=1 ; i < 5 ; i++) 
 //	{
 //	CAN_Transmit(i,VEL_LIMIT,20,4,DATA);
@@ -647,26 +646,26 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		test++;
-		HAL_Delay(500);
-//		BT_State = BT_READ;
-//		Joystick_Reception();
+//		test++;
+//		HAL_Delay(500);
+		BT_State = BT_READ;
+		Joystick_Reception();
 //	EEPROM_Store_Data();
 ////		Read_EEPROM_Data();	
-//		   Operations_Monitor();
-//		if(OPERATION_MONITOR_FLAG==SET){
+	   Operations_Monitor();
+		if(OPERATION_MONITOR_FLAG==SET){
 //		//Drives_Error_Check();
 //		Left_Frame_Controls();
-//		New_Drive_Controls();
-//    Steering_Controls();
-//	   Frame_Controls();
-//			Dynamic_Width_Adjustment();
+		New_Drive_Controls();
+   Steering_Controls();
+	   Frame_Controls();
+			Dynamic_Width_Adjustment();
 //	  Shearing_Motors ();
-////			Manual_Sensing_Control();
+//			Manual_Sensing_Control();
 //			//Top_Sensing_Roll();
-////		Shearing_Motors();
-//		}
-//		else{Emergency_Stop();}
+		Shearing_Motors();
+		}
+	else{Emergency_Stop();}
 //		
 		//Position_Flap_Sensing();
 		
@@ -698,8 +697,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 15;
-  RCC_OscInitStruct.PLL.PLLN = 216;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
@@ -749,8 +748,8 @@ static void MX_CAN1_Init(void)
   hcan1.Init.Prescaler = 12;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_12TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_11TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_3TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
@@ -833,43 +832,36 @@ static void MX_CAN2_Init(void)
 }
 
 /**
-  * @brief FMPI2C1 Initialization Function
+  * @brief I2C1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_FMPI2C1_Init(void)
+static void MX_I2C1_Init(void)
 {
 
-  /* USER CODE BEGIN FMPI2C1_Init 0 */
+  /* USER CODE BEGIN I2C1_Init 0 */
 
-  /* USER CODE END FMPI2C1_Init 0 */
+  /* USER CODE END I2C1_Init 0 */
 
-  /* USER CODE BEGIN FMPI2C1_Init 1 */
+  /* USER CODE BEGIN I2C1_Init 1 */
 
-  /* USER CODE END FMPI2C1_Init 1 */
-  hfmpi2c1.Instance = FMPI2C1;
-  hfmpi2c1.Init.Timing = 0xC0000E12;
-  hfmpi2c1.Init.OwnAddress1 = 0;
-  hfmpi2c1.Init.AddressingMode = FMPI2C_ADDRESSINGMODE_7BIT;
-  hfmpi2c1.Init.DualAddressMode = FMPI2C_DUALADDRESS_DISABLE;
-  hfmpi2c1.Init.OwnAddress2 = 0;
-  hfmpi2c1.Init.OwnAddress2Masks = FMPI2C_OA2_NOMASK;
-  hfmpi2c1.Init.GeneralCallMode = FMPI2C_GENERALCALL_DISABLE;
-  hfmpi2c1.Init.NoStretchMode = FMPI2C_NOSTRETCH_DISABLE;
-  if (HAL_FMPI2C_Init(&hfmpi2c1) != HAL_OK)
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
   {
     Error_Handler();
   }
+  /* USER CODE BEGIN I2C1_Init 2 */
 
-  /** Configure Analogue filter
-  */
-  if (HAL_FMPI2CEx_ConfigAnalogFilter(&hfmpi2c1, FMPI2C_ANALOGFILTER_ENABLE) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN FMPI2C1_Init 2 */
-
-  /* USER CODE END FMPI2C1_Init 2 */
+  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -992,7 +984,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, LED_1_Pin|LED_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Buzzer_1_Pin|Buzzer_2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, B1_Pin|Buzzer_1_Pin|Buzzer_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LED_1_Pin */
   GPIO_InitStruct.Pin = LED_1_Pin;
@@ -1014,8 +1006,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(UART4_State_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Buzzer_1_Pin Buzzer_2_Pin */
-  GPIO_InitStruct.Pin = Buzzer_1_Pin|Buzzer_2_Pin;
+  /*Configure GPIO pins : B1_Pin Buzzer_1_Pin Buzzer_2_Pin */
+  GPIO_InitStruct.Pin = B1_Pin|Buzzer_1_Pin|Buzzer_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1184,7 +1176,7 @@ void Clear_Error(int Axis)
 }
 void Set_Motor_Torque ( uint8_t Axis , float Torque )
 {
-	Torque =  (Axis==2) ? -Torque : Torque ;	
+	Torque =  (Axis==2)  ? -Torque : Torque ;	
 
 	CAN_Transmit(Axis,TORQUE,Torque,4,DATA); HAL_Delay(3);//10
 }
@@ -1352,27 +1344,27 @@ void Manual_Sensing_Control(void)
 {
 if(Mode==1)
 {
+	if(Joystick!=Joystick_Temp){
 	L_Arm_Speed=(Left_Arm_Motor_Count<-1)?5:Left_Arm_Motor_Count>1?-5:0;
 		R_Arm_Speed=(Right_Arm_Motor_Count<-1)?5:Right_Arm_Motor_Count>1?-5:0;
 		Pitch_Arm_Speed=(Pitch_Arm_Motor_Count<-1)?5:Pitch_Arm_Motor_Count>1?-5:0;
+		Joystick_Temp=Joystick;}
 }
 else if(Mode==2)
 {
-	//if(Joystick!=Joystick_Temp){
+	if(Joystick!=Joystick_Temp){
 	if(Joystick==3) {L_Arm_Speed= R_Arm_Speed=5;Pitch_Arm_Speed=4;}
 	else if( Joystick==4) {L_Arm_Speed= R_Arm_Speed=-5;Pitch_Arm_Speed=4;}
 	else {L_Arm_Speed= R_Arm_Speed=Pitch_Arm_Speed=0;}
-	//Joystick_Temp=Joystick;
-//}
+	Joystick_Temp=Joystick;}
 }
 
 else if(Mode==3){
-	//if(Joystick!=Joystick_Temp){
+	if(Joystick!=Joystick_Temp){
 	if(Joystick==3) {L_Arm_Speed=5; R_Arm_Speed=-5;}
 	else if(Joystick==4) {L_Arm_Speed=-5; R_Arm_Speed=5;}
 	else {L_Arm_Speed= R_Arm_Speed=Pitch_Arm_Speed=0;}
-	//	Joystick_Temp=Joystick;
-//}
+		Joystick_Temp=Joystick;}
 }
 
 else{}

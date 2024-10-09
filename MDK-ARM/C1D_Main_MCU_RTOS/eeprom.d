@@ -1,4 +1,4 @@
-c1d_main_mcu_rtos\eeprom.o: EEPROM.c
+c1d_main_mcu_rtos\eeprom.o: ..\Core\Src\EEPROM.c
 c1d_main_mcu_rtos\eeprom.o: ../Core/Inc/EEPROM.h
 c1d_main_mcu_rtos\eeprom.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
@@ -27,12 +27,12 @@ c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_ca
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c.h
-c1d_main_mcu_rtos\eeprom.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_fmpi2c_ex.h
 c1d_main_mcu_rtos\eeprom.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 c1d_main_mcu_rtos\eeprom.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
