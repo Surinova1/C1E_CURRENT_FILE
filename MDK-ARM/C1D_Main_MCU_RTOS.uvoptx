@@ -720,6 +720,36 @@
           <WinNumber>1</WinNumber>
           <ItemText>Left_Arm_Motor_Count,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>114</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Pitch_Arm_Motor_Count,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>115</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Left_Arm_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>116</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Right_Arm_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>117</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Pitch_Arm_Motor_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>118</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Write_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>119</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Read_Value,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -879,7 +909,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -947,7 +977,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

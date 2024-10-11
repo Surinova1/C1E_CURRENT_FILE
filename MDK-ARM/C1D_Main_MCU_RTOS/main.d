@@ -39,4 +39,3 @@ c1d_main_mcu_rtos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 c1d_main_mcu_rtos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 c1d_main_mcu_rtos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 c1d_main_mcu_rtos\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-c1d_main_mcu_rtos\main.o: ../Core/Inc/EEPROM.h

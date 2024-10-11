@@ -22,16 +22,15 @@
 #include "string.h"
 
 // Define the I2C
-//extern I2C_HandleTypeDef hi2c1;
-extern I2C_HandleTypeDef hi2c1;
-#define EEPROM_I2C &hi2c1 //hi2c1
+extern I2C_HandleTypeDef hi2c3;
+#define EEPROM_I2C &hi2c3
 
 // EEPROM ADDRESS (8bits)
-#define EEPROM_ADDR 0xAE
+#define EEPROM_ADDR 0xA0
 
 // Define the Page Size and number of pages
-#define PAGE_SIZE 32     // in Bytes
-#define PAGE_NUM  256    // number of pages
+#define PAGE_SIZE 64     // in Bytes
+#define PAGE_NUM  512    // number of pages
 
 
 
@@ -75,7 +74,7 @@ void EEPROM_Write (uint16_t page, uint16_t offset, uint8_t *data, uint16_t size)
 		uint16_t bytesremaining = bytestowrite(size, offset);  // calculate the remaining bytes to be written
 
 		HAL_I2C_Mem_Write(EEPROM_I2C, EEPROM_ADDR, MemAddress, 2, &data[pos], bytesremaining, 1000);  // write the data to the EEPROM
-		
+
 		startPage += 1;  // increment the page, so that a new page address can be selected for further write
 		offset=0;   // since we will be writing to a new page, so offset will be 0
 		size = size-bytesremaining;  // reduce the size of the bytes

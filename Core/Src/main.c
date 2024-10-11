@@ -27,7 +27,7 @@
 #include "math.h"
 #include <stdint.h>
 #include <stdlib.h>
-#include "EEPROM.h"
+//#include "EEPROM.h"
 
 /* USER CODE END Includes */
 
@@ -132,7 +132,7 @@
 CAN_HandleTypeDef hcan1;
 CAN_HandleTypeDef hcan2;
 
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c3;
 
 TIM_HandleTypeDef htim14;
 
@@ -319,7 +319,7 @@ static void MX_CAN2_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
 static void MX_TIM14_Init(void);
-static void MX_I2C1_Init(void);
+static void MX_I2C3_Init(void);
 /* USER CODE BEGIN PFP */
 
 float New_Sensor_Pos(double Sensor_Value, double Zero_Pos);
@@ -566,7 +566,7 @@ int main(void)
   MX_UART4_Init();
   MX_UART5_Init();
   MX_TIM14_Init();
-  MX_I2C1_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 	
 	BUZZER_ON;
@@ -627,7 +627,7 @@ int main(void)
 //EEPROM_Write(25,0, (uint8_t *)Test_Write,sizeof(Test_Write));
 //HAL_Delay(2000);
 //EEPROM_Read(25,0, (uint8_t *)Test_Read,sizeof(Test_Read));
-//	Read_EEPROM_Data();	
+	//Read_EEPROM_Data();	
 	
 //	Left_Arm_Motor_Value  = 0;
 //	Right_Arm_Motor_Value = 0;
@@ -651,7 +651,7 @@ int main(void)
 //		HAL_Delay(500);
 		BT_State = BT_READ;
 		Joystick_Reception();
-		EEPROM_Store_Data();
+		//EEPROM_Store_Data();
 ////		Read_EEPROM_Data();	
 	   Operations_Monitor();
 		if(OPERATION_MONITOR_FLAG==SET){
@@ -834,36 +834,36 @@ static void MX_CAN2_Init(void)
 }
 
 /**
-  * @brief I2C1 Initialization Function
+  * @brief I2C3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C1_Init(void)
+static void MX_I2C3_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+  /* USER CODE BEGIN I2C3_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+  /* USER CODE END I2C3_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+  /* USER CODE BEGIN I2C3_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.ClockSpeed = 100000;
+  hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C1_Init 2 */
+  /* USER CODE BEGIN I2C3_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+  /* USER CODE END I2C3_Init 2 */
 
 }
 
@@ -1202,15 +1202,15 @@ void Read_EEPROM_Data(void)
 //	EEPROM_Write(3, 0, (uint8_t *)Write_Value, sizeof(Write_Value));
 					
 //	EEPROM_PageErase (3);				
-	EEPROM_Read(35, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
+	EEPROM_Read(50, 0, (uint8_t *)Read_Value, sizeof(Read_Value));
 //	EEPROM_Read(6, 0, (uint8_t *)Read_Value_1, sizeof(Read_Value_1));
-	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
-	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
+//	memcpy(&Lower_Width_Motor_Value, &Read_Value[28],4 );	 				
+//	memcpy(&Upper_Width_Motor_Value, &Read_Value[4],4 );
 	memcpy(&Left_Arm_Motor_Value, &Read_Value[8],4 );
 	memcpy(&Right_Arm_Motor_Value, &Read_Value[12],4 );
 	memcpy(&Pitch_Arm_Motor_Value, &Read_Value[16],4 );
-	memcpy(&Right_Vertical_Motor_Value, &Read_Value[20],4 );
-	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
+//	memcpy(&Right_Vertical_Motor_Value, &Read_Value[20],4 );
+//	memcpy(&Contour_Motor_Value, &Read_Value[24],4 );
 	
 	
 //	if(Read_Value[0]>=600) 
@@ -2657,7 +2657,7 @@ void EEPROM_Store_Data (void)
 //	memcpy(&Write_Value[24], &Contour_Motor_Count, sizeof(Contour_Motor_Count));
 	
 	
-		for(uint8_t i =0; i <= 35; i++)
+		for(uint8_t i =0; i < 37; i++)
 		{
 			if(Prev_Write_Value[i] != Write_Value[i])
 			{
@@ -2670,7 +2670,7 @@ void EEPROM_Store_Data (void)
 		
 		if ( Store_Data)
 		{
-//		EEPROM_Write(35, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
+		EEPROM_Write(50, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); //HAL_Delay(10);
 //		EEPROM_Write(6, 0, (uint8_t *)Write_Value, sizeof(Write_Value)); 
 		}
 		else {}
@@ -2997,6 +2997,8 @@ void Dynamic_Width_Adjustment (void)
 	//if (( Upper_Width_Motor_Speed < 0) &&(( Upper_Width_Motor_Count >= -605 && Upper_Width_Motor_Count<=-595  )|| Upper_Width_Motor_Count <= -605))  Upper_Width_Motor_Speed = 0;
 	//else if (( Upper_Width_Motor_Speed > 0) &&(( Upper_Width_Motor_Count >=-5 && Upper_Width_Motor_Count<=5 )||Upper_Width_Motor_Count>=5 )) Upper_Width_Motor_Speed = 0;
 	//else{}
+	
+	//Upper_Width_Motor_Speed = Upper_Width_Motor_Count < Lower_Width_Motor_Count + 5 && Upper_Width_Motor_Count > Lower_Width_Motor_Count - 5 ? 0 : Upper_Width_Motor_Count < Lower_Width_Motor_Count - 5 ? -Width_Speed : Upper_Width_Motor_Count > Lower_Width_Motor_Count + 5 ? Width_Speed : Upper_Width_Motor_Speed; 
 	
 	if ( Width_Motor_Speed != Width_Motor_Temp || Lower_Width_Motor_Speed != Lower_Width_Motor_Speed_Temp || Upper_Width_Motor_Speed != Upper_Width_Motor_Speed_Temp )
 	{
