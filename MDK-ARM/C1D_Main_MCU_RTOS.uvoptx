@@ -750,6 +750,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>Read_Value,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>120</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Flap_Error,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>121</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>L_Arm_Speed</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -901,6 +911,26 @@
           <count>29</count>
           <WinNumber>2</WinNumber>
           <ItemText>test,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Flap_Mod_Value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Flap_Mod_Value_Right,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Left_Flap,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>Right_Flap,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

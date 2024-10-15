@@ -191,7 +191,7 @@ uint16_t FL_Home_Pos = 563 , FR_Home_Pos = 0, RL_Home_Pos = 0, RR_Home_Pos = 0;
 int16_t Left_Arm_Motor_Count=0, Right_Arm_Motor_Count=0, Right_Arm_Motor_Value=0, Left_Arm_Motor_Value=0, Pitch_Arm_Motor_Count=0, Pitch_Arm_Motor_Value=0;
 float L_Arm_Speed=0, R_Arm_Speed=0, L_Arm_Speed_Temp=0, R_Arm_Speed_Temp=0, Pitch_Arm_Speed_Temp=0, Tri_Arm_Speed=0;double Pitch_Arm_Speed=0;
 _Bool Front_Left_Bush = 0, Front_Right_Bush = 0, Front_Bushes_Sensed = 0, First_Sense=0 , Rear_Bush=0;
-int Flaps_Target = 36, Flap_Error=0,Flap_Error_Right = 0,Flaps_Target_Right=36;
+int Flaps_Target = 60, Flap_Error=0,Flap_Error_Right = 0,Flaps_Target_Right=60;
 float Flap_Kp = 2, Pitch_Kp=2 ;
 /* 							SENSING_VARIABLES 						*/
 
@@ -288,7 +288,7 @@ int16_t Flap_Data_Right[ARRAY_SIZE] = {0};
 
 int Flap_Max_Angle = 55;
 float Arm_Angle=0,Left_Arm_Pos = 0, Right_Arm_Pos = 0, Pitch_Arm_Pos = 0,Tri_Arm_Pos = 0, Left_Arm_Pos_Temp = 0, Right_Arm_Pos_Temp = 0, Pitch_Arm_Pos_Temp = 0;
-int Flap_Mod_Value = 0, Flap_Mod_Value_Right = 0;
+int Flap_Mod_Value = 0, Flap_Mod_Value_Right = 0,Left_Flap=0,Right_Flap=0;
 bool Front_Bush = 1;
 uint8_t Array_Element,Arm_Max_Speed=40;
 int Left_Arm_Current_Pos,Right_Arm_Current_Pos,Pitch_Arm_Current_Pos;
@@ -298,13 +298,13 @@ float  P_Error_Change=0, P_Error_Slope=0, P_Error_Area=0, P_Prev_Error=0, Pitch_
 
 
 long L_P=0,L_I=0,L_D=0;
-float L_Kp=0,L_Ki=0,L_Kd=0;
+float L_Kp=1,L_Ki=0,L_Kd=0;
 
 long RA_P=0,RA_I=0,RA_D=0;
-float RA_Kp=0,RA_Ki=0,RA_Kd=0;
+float RA_Kp=1,RA_Ki=0,RA_Kd=0;
 
 long P_P=0,P_I=0,P_D=0;
-float P_Kp=0,P_Ki=0,P_Kd=0;
+float P_Kp=1,P_Ki=0,P_Kd=0;
 
 float RightArm_Out=0,RA_Error_Change=0,RA_Error_Slope=0,RA_Error_Area=0,RA_Prev_Error=0;
 int8_t Test_Read,Test_Write;
@@ -470,16 +470,16 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 		
 		case (C_LMT): 		Contour_Limit_Raw =CAN_SPI_READ(RxData2); 		Contour_Limit = New_Sensor_Pos(Contour_Limit_Raw, C_Home_Pos );						FRAME_SPI[2]++;			  Sensor_Id[12]++;break;
 */	
-		case (FL_FLAP): 	FL_Raw =CAN_SPI_READ(RxData); 								
-											FL_Angle = New_Sensor_Pos(FL_Raw, FL_Home_Pos ); 
-											FL_Angle= abs(FL_Angle - 53);										
-											Update_Array(Flap_Data ,ARRAY_SIZE , FL_Angle ) ;
-											//if ( FL_Angle_Temp != FL_Angle ) {Update_Array(Flap_Data ,ARRAY_SIZE , FL_Angle ) ;  	FL_Angle_Temp = FL_Angle; }	
-											Sensor_Id[7]++;
-											break;
-    case (FR_FLAP): FR_Raw =CAN_SPI_READ(RxData); 
-		                Sensor_Id[8]++;
-										break;
+//		case (FL_FLAP): 	FL_Raw =CAN_SPI_READ(RxData); 								
+//											FL_Angle = New_Sensor_Pos(FL_Raw, FL_Home_Pos ); 
+//											FL_Angle= abs(FL_Angle - 53);										
+//											Update_Array(Flap_Data ,ARRAY_SIZE , FL_Angle ) ;
+//											//if ( FL_Angle_Temp != FL_Angle ) {Update_Array(Flap_Data ,ARRAY_SIZE , FL_Angle ) ;  	FL_Angle_Temp = FL_Angle; }	
+//											Sensor_Id[7]++;
+//											break;
+//    case (FR_FLAP): FR_Raw =CAN_SPI_READ(RxData); 
+//		                Sensor_Id[8]++;
+//										break;
 /*				
 		case (FR_FLAP): 	FR_Raw =CAN_SPI_READ(RxData); 								FR_Angle = -(New_Sensor_Pos(FR_Raw, FR_Home_Pos ));													FRAME_SPI[0]++;				Sensor_Id[14]++;break;
 		
@@ -651,7 +651,7 @@ int main(void)
 //		HAL_Delay(500);
 		BT_State = BT_READ;
 		Joystick_Reception();
-		//EEPROM_Store_Data();
+		EEPROM_Store_Data();
 ////		Read_EEPROM_Data();	
 	   Operations_Monitor();
 		if(OPERATION_MONITOR_FLAG==SET){
@@ -664,7 +664,7 @@ int main(void)
 	  Shearing_Motors ();
 			Demo();
 //			Manual_Sensing_Control();
-//			//Top_Sensing_Roll();
+//		Top_Sensing_Roll();
 //		Shearing_Motors();
 		}
 	else{Emergency_Stop();}
@@ -2854,8 +2854,10 @@ void Top_Sensing_Roll(void)
 {
 	Array_Element    =  Speed + 4 ;
 
-	Flap_Mod_Value = Flap_Data[Array_Element];
-	Flap_Mod_Value_Right = Flap_Data_Right[Array_Element];
+//	Flap_Mod_Value = Flap_Data[Array_Element];
+//	Flap_Mod_Value_Right = Flap_Data_Right[Array_Element];
+	Flap_Mod_Value=Left_Flap;
+	Flap_Mod_Value_Right=Right_Flap;
 
 	Front_Left_Bush  =  Flap_Mod_Value < 40 ? 0 : 1;
 	Front_Right_Bush = 	Flap_Mod_Value_Right < 40 ? 0: 1;
@@ -2921,8 +2923,8 @@ void Top_Sensing_Roll(void)
 	
 	else {}
 		
-	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 20 ? 10 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 10 ? -10 : L_Arm_Speed;
-	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 30 ? 0 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 0 ? 0 : L_Arm_Speed; // Arm - Boundaries
+	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 25 ? 10 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 15 ? -10 : L_Arm_Speed;
+	L_Arm_Speed = L_Arm_Speed > 0 && Left_Arm_Motor_Count > 35 ? 0 : L_Arm_Speed < 0 && Left_Arm_Motor_Count < 0 ? 0 : L_Arm_Speed; // Arm - Boundaries
 	
 	if( L_Arm_Speed_Temp != L_Arm_Speed )
 	{
@@ -2932,8 +2934,8 @@ void Top_Sensing_Roll(void)
 		}
 		L_Arm_Speed_Temp = L_Arm_Speed ;
 	}
-	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 20 ? 10 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 10 ? -10 : R_Arm_Speed;
-	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 30 ? 0 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 0 ? 0 : R_Arm_Speed;
+	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 25 ? 10 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 15 ? -10 : R_Arm_Speed;
+	R_Arm_Speed = R_Arm_Speed > 0 && Right_Arm_Motor_Count > 35 ? 0 : R_Arm_Speed < 0 && Right_Arm_Motor_Count < 0 ? 0 : R_Arm_Speed;
 	if( R_Arm_Speed_Temp != R_Arm_Speed )
 	{
 		for(uint8_t i = 0; i <= 2; i++)
@@ -3163,9 +3165,9 @@ void Demo()
 		default: break;
 	}
 	
-	L_Arm_Speed = (L_Arm_Speed > 0 && Left_Arm_Motor_Count >= 10) ? 0 : (L_Arm_Speed < 0 && Left_Arm_Motor_Count <= -10) ? 0 : L_Arm_Speed;
-	R_Arm_Speed = (R_Arm_Speed > 0 && Right_Arm_Motor_Count >= 10) ? 0 : (R_Arm_Speed < 0 && Right_Arm_Motor_Count <= -10) ? 0 : R_Arm_Speed;
-	Pitch_Arm_Speed = (Pitch_Arm_Speed > 0 && Pitch_Arm_Motor_Count >= 8) ? 0 : (Pitch_Arm_Speed < 0 && Pitch_Arm_Motor_Count <= -8) ? 0 : Pitch_Arm_Speed * 0.8;
+	L_Arm_Speed = (L_Arm_Speed > 0 && Left_Arm_Motor_Count >= 20) ? 0 : (L_Arm_Speed < 0 && Left_Arm_Motor_Count <= 0) ? 0 : L_Arm_Speed;
+	R_Arm_Speed = (R_Arm_Speed > 0 && Right_Arm_Motor_Count >= 20) ? 0 : (R_Arm_Speed < 0 && Right_Arm_Motor_Count <= 0) ? 0 : R_Arm_Speed;
+	Pitch_Arm_Speed = (Pitch_Arm_Speed > 0 && Pitch_Arm_Motor_Count >= 13) ? 0 : (Pitch_Arm_Speed < 0 && Pitch_Arm_Motor_Count <= 0) ? 0 : (Pitch_Arm_Speed/1.5);
 	
 	if (L_Arm_Speed != L_Arm_Speed_Temp)
 	{
